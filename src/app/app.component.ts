@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -25,20 +25,24 @@ export class AppComponent implements OnInit {
       const myInterval = setInterval(() => {
         subscriber.next(count);
         count++;
-        if (count > 4) {
-          subscriber.complete();
-        }
+        // if (count > 4) {
+        //   subscriber.complete();
+        // }
       }, 1000);
 
       return () => {
-        console.log('called and clearing interval');
+        console.log('📣📣📣 called and clearing interval 📣📣📣');
         clearInterval(myInterval);
       };
     });
 
-    console.log('🏁');
-    observable.subscribe(observer);
-    console.log('✋');
+    const subscription = observable.subscribe(observer);
+    const subscriptionTwo = observable.subscribe(observer);
+    subscription.add(subscriptionTwo);
+    setTimeout(() => {
+      subscription.unsubscribe();
+      // subscriptionTwo.unsubscribe();
+    }, 3500);
 
     // observable.subscribe(
     //   test => console.log(`Iam with ${test}`),
