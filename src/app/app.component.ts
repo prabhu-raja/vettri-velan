@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, fromEvent } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
       error: err => console.log('error - 🚨', err),
       complete: () => console.log('complete! - 👍')
     };
-    const source$ = fromEvent(document, 'click');
+    const source$ = of(1, 2, 3, 4, 5);
     source$.subscribe(observer);
   }
 }
