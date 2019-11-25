@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,8 @@ export class AppComponent implements OnInit {
   title = 'vettri-velan';
 
   ngOnInit(): void {
-    this.section1();
+    // this.section1();
+    this.section2();
   }
 
   section1() {
@@ -49,5 +50,15 @@ export class AppComponent implements OnInit {
     //   err => console.error(`Im an Error ${err}`),
     //   () => console.log('finally Iam completed')
     // );
+  }
+
+  section2() {
+    const observer = {
+      next: val => console.log('next - 🚀', val),
+      error: err => console.log('error - 🚨', err),
+      complete: () => console.log('complete! - 👍')
+    };
+    const source$ = fromEvent(document, 'click');
+    source$.subscribe(observer);
   }
 }
