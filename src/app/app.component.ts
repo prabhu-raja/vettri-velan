@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of, range, from } from 'rxjs';
+import { iterator } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -60,5 +61,7 @@ export class AppComponent implements OnInit {
     };
     const source$ = from([11, 32, 53, 74, 35]);
     source$.subscribe(observer);
+    console.log(iterator.next().value);
+    console.log(iterator.next().value);
   }
 }
