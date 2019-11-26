@@ -59,9 +59,19 @@ export class AppComponent implements OnInit {
       error: err => console.log('error - 🚨', err),
       complete: () => console.log('complete! - 👍')
     };
-    const source$ = from([11, 32, 53, 74, 35]);
+    // const source$ = from([11, 32, 53, 74, 35]);
+    // source$.subscribe(observer);
+
+    /**
+     * Using the Iterator from JS Generator function
+     */
+    console.log(iterator.next().value);
+    console.log(iterator.next().value);
+
+    /**
+     * Using the Rx JS Iterator
+     */
+    const source$ = from(iterator);
     source$.subscribe(observer);
-    console.log(iterator.next().value);
-    console.log(iterator.next().value);
   }
 }
