@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of, range, from } from 'rxjs';
+import { Observable, of, range, from, interval } from 'rxjs';
 import { iterator } from './app.service';
 
 @Component({
@@ -12,7 +12,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     // this.section1();
-    this.section2();
+    // this.section2();
+    this.section3();
   }
 
   section1() {
@@ -73,5 +74,10 @@ export class AppComponent implements OnInit {
      */
     const source$ = from(iterator);
     source$.subscribe(observer);
+  }
+
+  section3() {
+    const timer$ = interval(1000);
+    timer$.subscribe(console.log);
   }
 }
