@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of, range, from, interval } from 'rxjs';
+import { Observable, of, range, from, interval, timer } from 'rxjs';
 import { iterator } from './app.service';
 
 @Component({
@@ -77,7 +77,8 @@ export class AppComponent implements OnInit {
   }
 
   section3() {
-    const timer$ = interval(1000);
+    // const timer$ = interval(1000);
+    const timer$ = timer(2000, 1000);
     timer$.subscribe(console.log);
   }
 }
