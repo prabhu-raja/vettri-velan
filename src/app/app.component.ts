@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of, range, from, interval, timer } from 'rxjs';
+import { Observable, of, range, from, interval, timer, fromEvent } from 'rxjs';
 import { iterator } from './app.service';
+import { map, tap, pluck, mapTo } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // this.section1();
     // this.section2();
-    this.section3();
+    // this.section3();
+    this.section4();
   }
 
   section1() {
@@ -80,5 +82,25 @@ export class AppComponent implements OnInit {
     // const timer$ = interval(1000);
     const timer$ = timer(2000, 1000);
     timer$.subscribe(console.log);
+  }
+
+  section4() {
+    // of(1,2,3,4,5)
+    //   .pipe(
+    //     map(val => val*10),
+    //   )
+    //   .subscribe(console.log);
+    
+      const keyup$ = fromEvent(document, 'keyup');
+      const keycodepluck$ = keyup$
+        .pipe(
+          pluck('code')
+        );
+      const pressed$ = keyup$
+          .pipe(
+            mapTo('kind of hard coded')
+          )
+      // keycodepluck$.subscribe(console.log)
+      pressed$.subscribe(console.log)
   }
 }
