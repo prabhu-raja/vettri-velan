@@ -97,9 +97,9 @@ export class AppComponent implements OnInit {
           pluck('code')
         );
       const pressed$ = keyup$
-          .pipe(
-            mapTo('kind of hard coded')
-          )
+        .pipe(
+          mapTo('kind of hard coded')
+        );
       // keycodepluck$.subscribe(console.log)
       pressed$.subscribe(console.log)
   }
