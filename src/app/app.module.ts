@@ -6,11 +6,12 @@ import { AppComponent } from './app.component';
 import { ScrollBarComponent } from './scroll-bar/scroll-bar.component';
 import { HomeComponent } from './home/home.component';
 import { NotfoundComponent } from './notfound/notfound.component';
-import { SampleModule } from './sample/sample.module';
+// import { SampleModule } from './sample/sample.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full'},
   { path: 'scroll', component: ScrollBarComponent },
+  { path: 'sample', loadChildren: './sample/sample.module#SampleModule'},
   { path: '**', component: NotfoundComponent},
 ];
 
@@ -23,7 +24,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
-    SampleModule,
+    // SampleModule,
     RouterModule.forRoot(routes)
   ],
   providers: [],

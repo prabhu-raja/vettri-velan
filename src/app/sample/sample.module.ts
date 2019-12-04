@@ -4,7 +4,7 @@ import { SampleBoardComponent } from './sample-board/sample-board.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
- { path: 'sample', component: SampleBoardComponent }
+ { path: '', component: SampleBoardComponent }
 ];
 
 @NgModule({
