@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { ScrollBarComponent } from './scroll-bar/scroll-bar.component';
@@ -25,7 +25,9 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     // SampleModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: PreloadAllModules // * This will preload all lazy load modules
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
