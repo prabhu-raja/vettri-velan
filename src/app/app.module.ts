@@ -7,6 +7,8 @@ import { ScrollBarComponent } from './scroll-bar/scroll-bar.component';
 import { HomeComponent } from './home/home.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { Observable, of } from 'rxjs';
+import { AppSharedModule } from './app-shared/app-shared.module';
+import { SampleLoadGuard } from './app-shared/guards/sample-load.guard';
 // import { SampleModule } from './sample/sample.module';
 
 export class CustomPreload implements PreloadingStrategy {
@@ -23,6 +25,7 @@ const routes: Routes = [
     data: {
       isPreload: true
     },
+    canLoad: [SampleLoadGuard],
     loadChildren: './sample/sample.module#SampleModule'
   },
   { path: '**', component: NotfoundComponent},
@@ -37,6 +40,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
+    AppSharedModule,
     // SampleModule,
     RouterModule.forRoot(routes, {
       // preloadingStrategy: PreloadAllModules // * This will preload all lazy load modules
