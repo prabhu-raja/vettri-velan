@@ -90,7 +90,6 @@ export class AppComponent implements OnInit {
     //     map(val => val*10),
     //   )
     //   .subscribe(console.log);
-    
       const keyup$ = fromEvent(document, 'keyup');
       const keycodepluck$ = keyup$
         .pipe(
