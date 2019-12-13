@@ -25,16 +25,6 @@ const routes: Routes = [
    ]
   },
  { path: 'members', canActivate: [SampleActivateGuard], component: BoardMemberComponent }
-//  {
-//    path: 'holders',
-//    component: HolderLandingComponent,
-//    children: [
-//      {
-//        path: 'list',
-//        component: HolderListComponent
-//      }
-//    ]
-//  }
 ];
 
 @NgModule({
