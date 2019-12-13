@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { AppSharedModule } from '../app-shared/app-shared.module';
-import { SampleBoardComponent } from './sample-board/sample-board.component';
-import { BoardMemberComponent } from './board-member/board-member.component';
-import { SampleActivateGuard } from '../app-shared/guards/sample-activate.guard';
-import { HolderListComponent } from './board-member/holders/holder-list/holder-list.component';
-import { HolderLandingComponent } from './board-member/holders/holder-landing/holder-landing.component';
+import { AppSharedModule } from 'src/app/app-shared/app-shared.module';
+import { SampleBoardComponent } from 'src/app/sample/sample-board/sample-board.component';
+import { BoardMemberComponent } from 'src/app/sample/board-member/board-member.component';
+import { SampleActivateGuard } from 'src/app/app-shared/guards/sample-activate.guard';
+import { HolderListComponent } from 'src/app/sample/board-member/holders/holder-list/holder-list.component';
+import { HolderLandingComponent } from 'src/app/sample/board-member/holders/holder-landing/holder-landing.component';
 
 const routes: Routes = [
  {
