@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-board-member',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoardMemberComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit() {
+  }
+  gotoHolderLanding() {
+    this.router.navigateByUrl('/sample/holders');
   }
 
 }
