@@ -9,18 +9,32 @@ import { HolderListComponent } from './board-member/holders/holder-list/holder-l
 import { HolderLandingComponent } from './board-member/holders/holder-landing/holder-landing.component';
 
 const routes: Routes = [
- { path: '', component: SampleBoardComponent },
- { path: 'members', canActivate: [SampleActivateGuard], component: BoardMemberComponent },
  {
-   path: 'holders',
-   component: HolderLandingComponent,
+   path: '',
+   component: SampleBoardComponent,
    children: [
      {
-       path: 'list',
-       component: HolderListComponent
+       path: '',
+       redirectTo: '/sample',
+       pathMatch: 'full'
+     },
+     {
+       path: 'holders',
+       component: HolderLandingComponent
      }
    ]
- }
+  },
+ { path: 'members', canActivate: [SampleActivateGuard], component: BoardMemberComponent }
+//  {
+//    path: 'holders',
+//    component: HolderLandingComponent,
+//    children: [
+//      {
+//        path: 'list',
+//        component: HolderListComponent
+//      }
+//    ]
+//  }
 ];
 
 @NgModule({

@@ -13,7 +13,11 @@ export class SampleBoardComponent implements OnInit {
   ngOnInit() {
   }
 
-  gotoMembers() {
+  displayHolders() {
+    this.router.navigateByUrl('/sample/holders');
+  }
+
+  navtoMembers() {
     this.router.navigateByUrl('/sample/members');
   }
 

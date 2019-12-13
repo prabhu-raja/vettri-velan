@@ -14,8 +14,8 @@ export class BoardMemberComponent implements OnInit {
 
   ngOnInit() {
   }
-  gotoHolderLanding() {
-    this.router.navigateByUrl('/sample/holders');
+  gotoSampleLanding() {
+    this.router.navigateByUrl('/sample');
   }
 
 }
