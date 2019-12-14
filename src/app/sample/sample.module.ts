@@ -8,6 +8,7 @@ import { HolderListComponent } from 'src/app/sample/board-member/holders/holder-
 import { HolderLandingComponent } from 'src/app/sample/board-member/holders/holder-landing/holder-landing.component';
 import { SampleActivateGuard } from 'src/app/app-shared/guards/sample-activate.guard';
 import { SampleActivateChildGuard } from 'src/app/app-shared/guards/sample-activate-child.guard';
+import { SampleDeactivateGuard } from 'src/app/app-shared/guards/sample-deactivate.guard';
 
 const routes: Routes = [
  {
@@ -22,7 +23,8 @@ const routes: Routes = [
      },
      {
        path: 'holders',
-       component: HolderLandingComponent
+       component: HolderLandingComponent,
+       canDeactivate: [SampleDeactivateGuard]
      }
    ]
   },
