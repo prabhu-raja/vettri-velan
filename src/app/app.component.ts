@@ -18,9 +18,9 @@ export class AppComponent implements OnInit {
     // this.section4();
     // this.test();
     // this.practiceReduce();
-    // this.countDownTimer(10);
+    this.countDownTimer(10);
     // this.practiseTake();
-    this.practiseTakeWhile();
+    // this.practiseTakeWhile();
   }
 
   section1() {
@@ -146,9 +146,11 @@ export class AppComponent implements OnInit {
       .pipe(
         mapTo(-1),
         scan((accumulator, currentValue) => accumulator + currentValue, startsFrom),
-        filter(val => val >= 0)
+        tap(val => console.log(`Frm Tap ${val}`)),
+        // filter(val => val >= 0)
+        takeWhile(val => val >= 0)
       )
-      .subscribe(val => console.log(val));
+      .subscribe(val => console.log(`After Subscribe ${val}`));
   }
 
   practiseTake() {
