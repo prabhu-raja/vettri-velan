@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of, range, from, interval, timer, fromEvent } from 'rxjs';
 import { iterator } from './app.service';
-import { map, tap, pluck, mapTo, reduce, scan, filter } from 'rxjs/operators';
+import { map, tap, pluck, mapTo, reduce, scan, filter, take, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
     // this.section4();
     // this.test();
     // this.practiceReduce();
-    this.countDownTimer(10);
+    // this.countDownTimer(10);
+    this.practiseTake();
   }
 
   section1() {
@@ -121,7 +122,6 @@ export class AppComponent implements OnInit {
     // ).subscribe(console.log);
   }
 
-
   practiceReduce() {
     const numbers = [1, 2, 3, 4, 5];
     const consolidated = numbers.reduce((accumulator, currentValue) => accumulator + currentValue);
@@ -148,5 +148,29 @@ export class AppComponent implements OnInit {
         filter(val => val >= 0)
       )
       .subscribe(val => console.log(val));
+  }
+
+  practiseTake() {
+    const numbers$ = of(20, 21, 22 , 23, 42 , 25, 26);
+    const clickz$ = fromEvent<MouseEvent>(document, 'click');
+    clickz$
+      .pipe(
+        map(evt => ({x: evt.clientX, y: evt.clientY})),
+        // take(1),
+        first(({y}) => y > 200)
+      )
+      .subscribe({
+        next: console.log,
+        complete: () => console.log('Completion of Evt!')
+      });
+
+    // * basic
+    numbers$
+      .pipe(take(3))
+      .subscribe({
+        // next: (val) => console.log(val),
+        next: console.log,
+        complete: () => console.log('Complete!')
+      });
   }
 }
