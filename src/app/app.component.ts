@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of, range, from, interval, timer, fromEvent } from 'rxjs';
 import { iterator } from './app.service';
-import { map, tap, pluck, mapTo } from 'rxjs/operators';
+import { map, tap, pluck, mapTo, reduce, scan, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,10 @@ export class AppComponent implements OnInit {
     // this.section1();
     // this.section2();
     // this.section3();
-    this.section4();
+    // this.section4();
+    // this.test();
+    // this.practiceReduce();
+    this.countDownTimer(10);
   }
 
   section1() {
@@ -100,6 +103,50 @@ export class AppComponent implements OnInit {
           mapTo('kind of hard coded')
         );
       // keycodepluck$.subscribe(console.log)
-      pressed$.subscribe(console.log)
+      pressed$.subscribe(console.log);
+  }
+
+  test() {
+    // of('Hope').subscribe(console.log);
+    // from('Success').subscribe(console.log);
+    //
+    of(fetch('https://api.github.com/users/octocat')).subscribe(console.log);
+    from(fetch('https://api.github.com/users/octocat')).subscribe(console.log);
+    // of(1, 2, 3 , 4).pipe(
+    //   map(val => val * 10)
+    // ).subscribe(console.log);
+    // //
+    // from([1, 2, 3 , 4]).pipe(
+    //   map(val => val * 10)
+    // ).subscribe(console.log);
+  }
+
+
+  practiceReduce() {
+    const numbers = [1, 2, 3, 4, 5];
+    const consolidated = numbers.reduce((accumulator, currentValue) => accumulator + currentValue);
+    console.log('Acc', consolidated);
+    // * Reduce
+    from(numbers)
+      .pipe(
+        reduce((accumulator, currentValue) => accumulator + currentValue)
+      )
+      .subscribe(val => console.log(`Rx Reduce - ${val}`));
+    // * Scan
+    from(numbers)
+      .pipe(
+        scan((accumulator, currentValue) => accumulator + currentValue)
+      )
+      .subscribe(val => console.log(`Rx Scan - ${val}`));
+  }
+
+  countDownTimer(startsFrom) {
+    interval(1000)
+      .pipe(
+        mapTo(-1),
+        scan((accumulator, currentValue) => accumulator + currentValue, startsFrom),
+        filter(val => val >= 0)
+      )
+      .subscribe(val => console.log(val));
   }
 }
