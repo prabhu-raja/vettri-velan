@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     // this.countDownTimer(10);
     // this.practiseTake();
     // this.practiseTakeWhile();
-    this.practiseTakeUntil();
+    // this.practiseTakeUntil();
   }
 
   section1() {

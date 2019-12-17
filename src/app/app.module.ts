@@ -9,6 +9,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 import { Observable, of } from 'rxjs';
 import { AppSharedModule } from './app-shared/app-shared.module';
 import { SampleLoadGuard } from './app-shared/guards/sample-load.guard';
+import { CountdownTimerComponent } from './components/countdown-timer/countdown-timer.component';
 // import { SampleModule } from './sample/sample.module';
 
 export class CustomPreload implements PreloadingStrategy {
@@ -20,6 +21,7 @@ export class CustomPreload implements PreloadingStrategy {
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full'},
   { path: 'scroll', component: ScrollBarComponent },
+  { path: 'countdown', component: CountdownTimerComponent},
   {
     path: 'sample',
     data: {
@@ -36,7 +38,8 @@ const routes: Routes = [
     AppComponent,
     ScrollBarComponent,
     HomeComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    CountdownTimerComponent
   ],
   imports: [
     BrowserModule,
