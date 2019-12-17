@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of, range, from, interval, timer, fromEvent } from 'rxjs';
 import { iterator } from './app.service';
-import { map, tap, pluck, mapTo, reduce, scan, filter, take, first, takeWhile } from 'rxjs/operators';
+import { map, tap, pluck, mapTo, reduce, scan, filter, take, first, takeWhile, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +18,10 @@ export class AppComponent implements OnInit {
     // this.section4();
     // this.test();
     // this.practiceReduce();
-    this.countDownTimer(10);
+    // this.countDownTimer(10);
     // this.practiseTake();
     // this.practiseTakeWhile();
+    this.practiseTakeUntil();
   }
 
   section1() {
@@ -187,6 +188,20 @@ export class AppComponent implements OnInit {
       .subscribe({
         next: console.log,
         complete: () => console.log('℞ 🎬While Completeed ')
+      });
+  }
+
+  practiseTakeUntil() {
+    // * takeUntil - Takes value until another observable emits a value.
+    const counter$ = interval(1000);
+    const clickz$ = fromEvent(document, 'click');
+    counter$
+      .pipe(
+        takeUntil(clickz$)
+      )
+      .subscribe({
+        next: console.log,
+        complete: () => console.log('takeWhile completed')
       });
   }
 }
