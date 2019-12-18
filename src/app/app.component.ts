@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of, range, from, interval, timer, fromEvent } from 'rxjs';
 import { iterator } from './app.service';
-import { map, tap, pluck, mapTo, reduce, scan, filter, take, first, takeWhile, takeUntil } from 'rxjs/operators';
+import { map, tap, pluck, mapTo, reduce, scan, filter, take, first, takeWhile, takeUntil, distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
     // this.practiseTake();
     // this.practiseTakeWhile();
     // this.practiseTakeUntil();
+    this.practiseDistinctUntilChanged();
   }
 
   section1() {
@@ -203,5 +204,34 @@ export class AppComponent implements OnInit {
         next: console.log,
         complete: () => console.log('takeWhile completed')
       });
+  }
+
+  practiseDistinctUntilChanged() {
+    const numbers$ = of(1, 1, 2, 3, 3, 3, 4, 5);
+    numbers$
+      .pipe(distinctUntilChanged())
+      // * Duplicate values which appear in a row are removed & leaving only one occurence of each of our numbers
+      .subscribe(val => console.log(`In a series occurence ${val}`));
+    //
+    const challenges$ = of(1, 1, 2, 3, 3, 3, 4, 5, 1, 3);
+    challenges$
+      .pipe(distinctUntilChanged())
+      // * now it will repeat 1, 3
+      .subscribe(val => console.log(`NOT In a series occurence ${val}`));
+    //
+    const user = [
+      { name: 'Brian', loggedIn: false, token: null },
+      { name: 'Brian', loggedIn: true, token: 'abc' },
+      { name: 'Lara', loggedIn: true, token: 'xyz' },
+      { name: 'Brian', loggedIn: true, token: '123' }
+    ];
+
+    from(user)
+      .pipe(
+        distinctUntilKeyChanged('name'),
+        // distinctUntilChanged((prev, curr) => prev.name === curr.name), // * when custom comparer needs we may use this
+        map(val => val.name)
+      )
+      .subscribe(console.log);
   }
 }
