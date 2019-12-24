@@ -21,4 +21,8 @@ export class SampleBoardComponent implements OnInit {
     this.router.navigateByUrl('/sample/members');
   }
 
+  navtoRxRateLimiting() {
+    this.router.navigateByUrl('/sample/rate-limiting')
+  }
+
 }

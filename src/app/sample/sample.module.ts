@@ -9,6 +9,7 @@ import { HolderLandingComponent } from 'src/app/sample/board-member/holders/hold
 import { SampleActivateGuard } from 'src/app/app-shared/guards/sample-activate.guard';
 import { SampleActivateChildGuard } from 'src/app/app-shared/guards/sample-activate-child.guard';
 import { SampleDeactivateGuard } from 'src/app/app-shared/guards/sample-deactivate.guard';
+import { RxRateLimitingComponent } from 'src/app/sample/rx-rate-limiting/rx-rate-limiting.component';
 
 const routes: Routes = [
  {
@@ -25,6 +26,10 @@ const routes: Routes = [
        path: 'holders',
        component: HolderLandingComponent,
        canDeactivate: [SampleDeactivateGuard]
+     },
+     {
+       path: 'rate-limiting',
+       component: RxRateLimitingComponent
      }
    ]
   },
@@ -36,7 +41,8 @@ const routes: Routes = [
     SampleBoardComponent,
     BoardMemberComponent,
     HolderListComponent,
-    HolderLandingComponent
+    HolderLandingComponent,
+    RxRateLimitingComponent
   ],
   imports: [
     CommonModule,
