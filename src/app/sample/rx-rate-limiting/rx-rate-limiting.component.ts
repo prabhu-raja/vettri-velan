@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { debounceTime, pluck, distinctUntilChanged } from 'rxjs/operators';
+import { fromEvent, interval } from 'rxjs';
+import { debounceTime, pluck, distinctUntilChanged, debounce } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-rate-limiting',
@@ -16,13 +16,16 @@ export class RxRateLimitingComponent implements OnInit {
   }
 
   practiseDebounce() {
+    // declarations
+    const waitingSec = 1000;
     // elements
     const inputBox = document.getElementById('text-input');
     // streams
     const input$ = fromEvent(inputBox, 'keyup');
     input$
       .pipe(
-        debounceTime(1000),
+        // debounceTime(1000),
+        debounce(() => interval(waitingSec)),
         pluck('target', 'value'),
         distinctUntilChanged()
       )
