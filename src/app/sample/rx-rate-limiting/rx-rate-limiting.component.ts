@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { fromEvent, interval } from 'rxjs';
-import { debounceTime, pluck, distinctUntilChanged, debounce } from 'rxjs/operators';
+import { debounceTime, pluck, distinctUntilChanged, debounce, throttleTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-rate-limiting',
@@ -12,8 +12,15 @@ export class RxRateLimitingComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.practiseDebounce();
+    // this.practiseDebounce();
+    this.practiseThrottle();
   }
+
+  /**
+   * ? Notes
+   * ! debounceTime - After mentioned time debounce emits the value.
+   * ! throttleTime - After first emission throttle ignores with mentioned time.
+   */
 
   practiseDebounce() {
     // declarations
@@ -31,6 +38,20 @@ export class RxRateLimitingComponent implements OnInit {
       )
       .subscribe(console.log);
 
+  }
+
+  practiseThrottle() {
+    // elements
+    const inputBox = document.getElementById('throttle-input');
+    // streams
+    const input$ = fromEvent(inputBox, 'keyup');
+    input$
+      .pipe(
+        throttleTime(2000),
+        pluck('target', 'value'),
+        distinctUntilChanged()
+      )
+      .subscribe(console.log);
   }
 
 }
