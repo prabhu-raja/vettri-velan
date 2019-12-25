@@ -1,7 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of, range, from, interval, timer, fromEvent } from 'rxjs';
 import { iterator } from './app.service';
-import { map, tap, pluck, mapTo, reduce, scan, filter, take, first, takeWhile, takeUntil, distinctUntilChanged, distinctUntilKeyChanged } from 'rxjs/operators';
+import {
+  map,
+  tap,
+  pluck,
+  mapTo,
+  reduce,
+  scan,
+  filter,
+  take,
+  first,
+  takeWhile,
+  takeUntil,
+  distinctUntilChanged,
+  distinctUntilKeyChanged
+} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +36,7 @@ export class AppComponent implements OnInit {
     // this.practiseTake();
     // this.practiseTakeWhile();
     // this.practiseTakeUntil();
-    this.practiseDistinctUntilChanged();
+    // this.practiseDistinctUntilChanged();
   }
 
   section1() {
