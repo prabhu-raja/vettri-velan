@@ -22,7 +22,11 @@ export class SampleBoardComponent implements OnInit {
   }
 
   navtoRxRateLimiting() {
-    this.router.navigateByUrl('/sample/rate-limiting')
+    this.router.navigateByUrl('/sample/rate-limiting');
+  }
+
+  navtoRxTransformation() {
+    this.router.navigateByUrl('/sample/transformation');
   }
 
 }
