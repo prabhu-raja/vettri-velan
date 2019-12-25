@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { map, debounceTime } from 'rxjs/operators';
+import { map, debounceTime, mergeAll, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-transformation',
@@ -25,10 +25,10 @@ export class RxTransformationComponent implements OnInit {
           const term = evt.target.value;
           return ajax.getJSON(`https://api.github.com/users/${term}`);
         }),
-        debounceTime(900)
+        debounceTime(900),
+        mergeAll(),
+        tap(val => console.log('🎅🏻', val))
       )
-      .subscribe(obs => {
-        obs.subscribe(console.log);
-      });
+      .subscribe(console.log);
   }
 }
