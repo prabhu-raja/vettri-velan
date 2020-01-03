@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { fromEvent, interval } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { map, debounceTime, mergeAll, tap, mergeMap, takeWhile, takeUntil, switchMap } from 'rxjs/operators';
+import { map, debounceTime, mergeAll, tap, mergeMap, takeWhile, takeUntil, switchMap, pluck, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-transformation',
@@ -11,6 +11,7 @@ import { map, debounceTime, mergeAll, tap, mergeMap, takeWhile, takeUntil, switc
 export class RxTransformationComponent implements OnInit, OnDestroy {
   alive = true;
   globalMsg: string;
+  BASE_URL = 'https://api.openbrewerydb.org/breweries';
   constructor() { }
 
   ngOnInit() {
@@ -18,7 +19,8 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
     // this.mergeAllToMergeMap();
     // this.practiseMergeMap1();
     // this.practiseMergeMap2();
-    this.practiseInitSwitchMap();
+    // this.practiseInitSwitchMap();
+    this.practiseSwitchMap();
   }
 
   practiseMergeAll() {
@@ -92,6 +94,26 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
         // * but switchMap-> switches to new observable on emissions from source & cancelling previously active inner observable
       )
       .subscribe(console.log);
+  }
+
+  practiseSwitchMap() {
+    this.globalMsg = 'Switch Map with debounce';
+    const textInput = document.getElementById('text-input');
+    const input$ = fromEvent<any>(textInput, 'keyup');
+    const typeaheadContainer = document.getElementById('input-container');
+
+    input$
+      .pipe(
+        debounceTime(200),
+        pluck('target', 'value'),
+        distinctUntilChanged(),
+        switchMap(val => {
+          return ajax.getJSON(`${this.BASE_URL}?by_name=${val}`);
+        })
+      )
+      .subscribe((resp: any[]) => {
+        typeaheadContainer.innerHTML = resp.map(brew => brew.name).join('<br>');
+      });
   }
 
   ngOnDestroy() {
