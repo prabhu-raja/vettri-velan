@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { fromEvent, interval } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { map, debounceTime, mergeAll, tap, mergeMap, takeWhile, takeUntil } from 'rxjs/operators';
+import { map, debounceTime, mergeAll, tap, mergeMap, takeWhile, takeUntil, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-transformation',
@@ -17,7 +17,8 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
     // this.practiseMergeAll();
     // this.mergeAllToMergeMap();
     // this.practiseMergeMap1();
-    this.practiseMergeMap2();
+    // this.practiseMergeMap2();
+    this.practiseInitSwitchMap();
   }
 
   practiseMergeAll() {
@@ -78,6 +79,19 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
         tap(() => console.log('After'))
       )
       .subscribe(val => console.log('This will stop on typing in textbox', val));
+  }
+
+  practiseInitSwitchMap() {
+    const clickz$ = fromEvent(document, 'click');
+    const interval$ = interval(800);
+    clickz$
+      .pipe(
+        // mergeMap(() => interval$)
+        // * When using mergeMap it keeps the previous observable
+        switchMap(() => interval$)
+        // * but switchMap-> switches to new observable on emissions from source & cancelling previously active inner observable
+      )
+      .subscribe(console.log);
   }
 
   ngOnDestroy() {
