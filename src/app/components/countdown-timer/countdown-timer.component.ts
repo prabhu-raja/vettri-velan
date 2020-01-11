@@ -31,6 +31,7 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
         scan((accumulator, currentValue) => accumulator + currentValue, startsFrom),
         tap(val => console.log(` Before ⏰ Tap ${val}`)),
         takeWhile(() => this.alive),
+        // takeWhile(val => val >= 0),
         takeUntil(abort$), // * takeUntil - Takes value until another observable emits a value.
         tap(val => console.log(` After ⏰ Tap ${val}`))
         // filter(val => val >= 0) // * If we use the filter time display will stop in 0 but behind the screen stream continues

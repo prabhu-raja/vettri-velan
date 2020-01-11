@@ -1,7 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { fromEvent, interval } from 'rxjs';
+import { interval, of, fromEvent } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
-import { map, debounceTime, mergeAll, tap, mergeMap, takeWhile, takeUntil, switchMap, pluck, distinctUntilChanged } from 'rxjs/operators';
+import {
+  map,
+  debounceTime,
+  mergeAll,
+  tap,
+  mergeMap,
+  takeWhile,
+  takeUntil,
+  switchMap,
+  pluck,
+  distinctUntilChanged,
+  concatMap,
+  take,
+  delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-transformation',
@@ -11,6 +24,7 @@ import { map, debounceTime, mergeAll, tap, mergeMap, takeWhile, takeUntil, switc
 export class RxTransformationComponent implements OnInit, OnDestroy {
   alive = true;
   globalMsg: string;
+  // isConcatMap = false;
   BASE_URL = 'https://api.openbrewerydb.org/breweries';
   constructor() { }
 
@@ -20,7 +34,9 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
     // this.practiseMergeMap1();
     // this.practiseMergeMap2();
     // this.practiseInitSwitchMap();
-    this.practiseSwitchMap();
+    // this.practiseSwitchMap();
+    // this.playConcatMap();
+    this.practiseConcatMap();
   }
 
   practiseMergeAll() {
@@ -109,11 +125,39 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         switchMap(val => {
           return ajax.getJSON(`${this.BASE_URL}?by_name=${val}`);
-        })
+        }),
+        tap(val => console.log('Aftr switch', val))
       )
       .subscribe((resp: any[]) => {
         typeaheadContainer.innerHTML = resp.map(brew => brew.name).join('<br>');
       });
+  }
+
+  playConcatMap() {
+    // this is like a queue. If you click 5 times it results 012,012,012,012,012
+    const clickz$ = fromEvent(document, 'click');
+    const interval$ = interval(800);
+    clickz$
+      .pipe(
+        concatMap(() => interval$.pipe(take(2)))
+      )
+      .subscribe(console.log);
+  }
+
+  practiseConcatMap() {
+    // this.isConcatMap = true;
+
+    const saveAnswer = (answer) => {
+      return of(`Saved answers: ${answer}`).pipe(delay(1500));
+    };
+    // elements
+    const radioButtons = document.querySelectorAll('.radio-option');
+    // streams
+    fromEvent<any>(radioButtons, 'click')
+      .pipe(
+        concatMap(evt => saveAnswer(evt.target.value))
+      )
+      .subscribe(console.log);
   }
 
   ngOnDestroy() {
