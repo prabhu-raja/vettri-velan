@@ -14,7 +14,8 @@ import {
   distinctUntilChanged,
   concatMap,
   take,
-  delay } from 'rxjs/operators';
+  delay,
+  exhaustMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-transformation',
@@ -36,7 +37,8 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
     // this.practiseInitSwitchMap();
     // this.practiseSwitchMap();
     // this.playConcatMap();
-    this.practiseConcatMap();
+    // this.practiseConcatMap();
+    this.practiseExhaustMap();
   }
 
   practiseMergeAll() {
@@ -156,6 +158,25 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
     fromEvent<any>(radioButtons, 'click')
       .pipe(
         concatMap(evt => saveAnswer(evt.target.value))
+      )
+      .subscribe(console.log);
+  }
+
+  practiseExhaustMap() {
+    // When user clicks 2 times exhaust will takes the firt and omits the next inner obeervable.
+    const authenticateUser = () => {
+      return ajax.post('https://reqres.in/api/login', {
+        email: 'eve.holt@reqres.in',
+        password: 'welcome'
+      });
+    };
+    const loginBtn = document.getElementById('login');
+    fromEvent<any>(loginBtn, 'click')
+      .pipe(
+        // mergeMap(() => authenticateUser()) // Occur 2 times
+        // switchMap(() => authenticateUser()) // 1st req 'll be cancelled as we're switching to new observable
+        // concatMap(() => authenticateUser()) // takes both observables
+        exhaustMap(() => authenticateUser())
       )
       .subscribe(console.log);
   }
