@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { interval, of, fromEvent } from 'rxjs';
+import { interval, of, fromEvent, empty, EMPTY } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
   map,
@@ -15,7 +15,8 @@ import {
   concatMap,
   take,
   delay,
-  exhaustMap} from 'rxjs/operators';
+  exhaustMap,
+  catchError} from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-transformation',
@@ -35,10 +36,10 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
     // this.practiseMergeMap1();
     // this.practiseMergeMap2();
     // this.practiseInitSwitchMap();
-    // this.practiseSwitchMap();
+    this.practiseSwitchMap();
     // this.playConcatMap();
     // this.practiseConcatMap();
-    this.practiseExhaustMap();
+    // this.practiseExhaustMap();
   }
 
   practiseMergeAll() {
@@ -126,7 +127,14 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
         pluck('target', 'value'),
         distinctUntilChanged(),
         switchMap(val => {
-          return ajax.getJSON(`${this.BASE_URL}?by_name=${val}`);
+          return ajax.getJSON(`${this.BASE_URL}?by_name=${val}`)
+            .pipe(
+              catchError((err, cught) => {
+                // return empty();
+                return EMPTY; // ? both empty() & EMPTY are same. this will try based on user input
+                // return cught; // ? this will keep on trying by making multiple request
+              })
+            );
         }),
         tap(val => console.log('Aftr switch', val))
       )
