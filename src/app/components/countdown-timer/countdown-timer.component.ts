@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { interval, fromEvent } from 'rxjs';
-import { scan, mapTo, tap, filter, takeUntil, takeWhile } from 'rxjs/operators';
+import { scan, mapTo, tap, filter, takeUntil, takeWhile, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-countdown-timer',
@@ -17,11 +17,11 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
   }
 
   initTimer(startsFrom) {
-    // * Element Refs
+    // ? Element Refs
     const countdown = document.getElementById('countdown');
     const abortButton = document.getElementById('abort');
 
-    // * Streams
+    // ? Streams
     const counter$ = interval(1000);
     const abort$ = fromEvent(abortButton, 'click');
 
@@ -31,10 +31,11 @@ export class CountdownTimerComponent implements OnInit, OnDestroy {
         scan((accumulator, currentValue) => accumulator + currentValue, startsFrom),
         tap(val => console.log(` Before ⏰ Tap ${val}`)),
         takeWhile(() => this.alive),
-        // takeWhile(val => val >= 0),
-        takeUntil(abort$), // * takeUntil - Takes value until another observable emits a value.
+        takeWhile(val => val >= 0),
+        takeUntil(abort$), // ? takeUntil - Takes value until another observable emits a value.
+        startWith(10),
         tap(val => console.log(` After ⏰ Tap ${val}`))
-        // filter(val => val >= 0) // * If we use the filter time display will stop in 0 but behind the screen stream continues
+        // filter(val => val >= 0) // ? If we use the filter time display will stop in 0 but behind the screen stream continues
       )
       .subscribe(val => countdown.innerHTML = val);
   }
