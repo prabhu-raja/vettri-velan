@@ -12,6 +12,7 @@ import { SampleDeactivateGuard } from 'src/app/app-shared/guards/sample-deactiva
 import { RxRateLimitingComponent } from 'src/app/sample/rx-rate-limiting/rx-rate-limiting.component';
 import { RxTransformationComponent } from 'src/app/sample/rx-transformation/rx-transformation.component';
 import { RxCombinationComponent } from './rx-combination/rx-combination.component';
+import { MortgageCalculatorComponent } from './mortgage-calculator/mortgage-calculator.component';
 
 const routes: Routes = [
  {
@@ -40,10 +41,18 @@ const routes: Routes = [
      {
        path: 'combination',
        component: RxCombinationComponent
+     },
+     {
+       path: 'mortgage',
+       component: MortgageCalculatorComponent
      }
    ]
   },
- { path: 'members', canActivate: [SampleActivateGuard], component: BoardMemberComponent }
+  {
+    path: 'members',
+    canActivate: [SampleActivateGuard],
+    component: BoardMemberComponent
+  }
 ];
 
 @NgModule({
@@ -54,7 +63,8 @@ const routes: Routes = [
     HolderLandingComponent,
     RxRateLimitingComponent,
     RxTransformationComponent,
-    RxCombinationComponent
+    RxCombinationComponent,
+    MortgageCalculatorComponent
   ],
   imports: [
     CommonModule,
