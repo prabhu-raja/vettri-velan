@@ -11,6 +11,7 @@ import { SampleActivateChildGuard } from 'src/app/app-shared/guards/sample-activ
 import { SampleDeactivateGuard } from 'src/app/app-shared/guards/sample-deactivate.guard';
 import { RxRateLimitingComponent } from 'src/app/sample/rx-rate-limiting/rx-rate-limiting.component';
 import { RxTransformationComponent } from 'src/app/sample/rx-transformation/rx-transformation.component';
+import { RxCombinationComponent } from './rx-combination/rx-combination.component';
 
 const routes: Routes = [
  {
@@ -35,6 +36,10 @@ const routes: Routes = [
      {
        path: 'transformation',
        component: RxTransformationComponent
+     },
+     {
+       path: 'combination',
+       component: RxCombinationComponent
      }
    ]
   },
@@ -48,7 +53,8 @@ const routes: Routes = [
     HolderListComponent,
     HolderLandingComponent,
     RxRateLimitingComponent,
-    RxTransformationComponent
+    RxTransformationComponent,
+    RxCombinationComponent
   ],
   imports: [
     CommonModule,

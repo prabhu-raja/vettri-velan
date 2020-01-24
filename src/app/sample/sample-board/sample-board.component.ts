@@ -29,4 +29,8 @@ export class SampleBoardComponent implements OnInit {
     this.router.navigateByUrl('/sample/transformation');
   }
 
+  navtoRxCombination() {
+    this.router.navigateByUrl('/sample/combination');
+  }
+
 }
