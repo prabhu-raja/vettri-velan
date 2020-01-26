@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MortgageService } from 'src/app/app-shared/services/mortgage.service';
 import { fromEvent, of, combineLatest } from 'rxjs';
-import { map, delay, filter, tap, mergeMap, switchMap } from 'rxjs/operators';
+import { map, delay, filter, tap, mergeMap, switchMap, share } from 'rxjs/operators';
 
 @Component({
   selector: 'app-mortgage-calculator',
@@ -49,12 +49,13 @@ export class MortgageCalculatorComponent implements OnInit {
       map(([loanAmountVal, interestVal, loanMonthsVal]) => {
         return this.mortgageService.calculateMortgage(interestVal, loanAmountVal, loanMonthsVal);
       }),
+      tap(console.log),
       filter((mortgageAmount: any) => !isNaN(mortgageAmount)),
-      tap(console.log)
+      share()
     );
 
     calculation$
-      .pipe(mergeMap(mortgageAmount => saveRespone(mortgageAmount)))
+      .pipe(switchMap(mortgageAmount => saveRespone(mortgageAmount)))
       .subscribe();
 
     calculation$
