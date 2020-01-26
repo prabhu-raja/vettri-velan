@@ -33,4 +33,8 @@ export class SampleBoardComponent implements OnInit {
     this.router.navigateByUrl('/sample/combination');
   }
 
+  navtoMortgageCalculator() {
+    this.router.navigateByUrl('/sample/mortgage');
+  }
+
 }
