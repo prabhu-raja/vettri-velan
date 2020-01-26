@@ -39,22 +39,27 @@ export class MortgageCalculatorComponent implements OnInit {
     const interest$ = createInputValueStream(interest);
     const loanLength$ = createInputValueStream(loanLength);
 
-    combineLatest(
+    const calculation$ = combineLatest(
       loanAmount$,
       interest$,
       loanLength$
     )
     .pipe(
-      tap(console.log),
+      // tap(console.log),
       map(([loanAmountVal, interestVal, loanMonthsVal]) => {
         return this.mortgageService.calculateMortgage(interestVal, loanAmountVal, loanMonthsVal);
       }),
       filter((mortgageAmount: any) => !isNaN(mortgageAmount)),
-      switchMap(mortgageAmount => saveRespone(mortgageAmount)),
-    )
-    .subscribe(mortgageAmount => {
-      expected.innerHTML = mortgageAmount;
-    });
-  }
+      tap(console.log)
+    );
 
+    calculation$
+      .pipe(mergeMap(mortgageAmount => saveRespone(mortgageAmount)))
+      .subscribe();
+
+    calculation$
+      .subscribe(mortgageAmount => {
+        expected.innerHTML = mortgageAmount;
+      });
+  }
 }
