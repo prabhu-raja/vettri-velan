@@ -37,6 +37,11 @@ export class AppComponent implements OnInit {
     // this.practiseTakeWhile();
     // this.practiseTakeUntil();
     // this.practiseDistinctUntilChanged();
+    // this.playCold();
+  }
+
+  playCold() {
+    interval(1000).pipe(take(5));
   }
 
   section1() {

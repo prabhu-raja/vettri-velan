@@ -13,40 +13,45 @@ import { RxRateLimitingComponent } from 'src/app/sample/rx-rate-limiting/rx-rate
 import { RxTransformationComponent } from 'src/app/sample/rx-transformation/rx-transformation.component';
 import { RxCombinationComponent } from './rx-combination/rx-combination.component';
 import { MortgageCalculatorComponent } from './mortgage-calculator/mortgage-calculator.component';
+import { RxSubjectComponent } from './rx-subject/rx-subject.component';
 
 const routes: Routes = [
- {
-   path: '',
-   component: SampleBoardComponent,
-   canActivateChild: [SampleActivateChildGuard],
-   children: [
-     {
-       path: '',
-       redirectTo: '/sample',
-       pathMatch: 'full'
-     },
-     {
-       path: 'holders',
-       component: HolderLandingComponent,
-       canDeactivate: [SampleDeactivateGuard]
-     },
-     {
-       path: 'rate-limiting',
-       component: RxRateLimitingComponent
-     },
-     {
-       path: 'transformation',
-       component: RxTransformationComponent
-     },
-     {
-       path: 'combination',
-       component: RxCombinationComponent
-     },
-     {
-       path: 'mortgage',
-       component: MortgageCalculatorComponent
-     }
-   ]
+  {
+    path: '',
+    component: SampleBoardComponent,
+    canActivateChild: [SampleActivateChildGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: '/sample',
+        pathMatch: 'full'
+      },
+      {
+        path: 'holders',
+        component: HolderLandingComponent,
+        canDeactivate: [SampleDeactivateGuard]
+      },
+      {
+        path: 'rate-limiting',
+        component: RxRateLimitingComponent
+      },
+      {
+        path: 'transformation',
+        component: RxTransformationComponent
+      },
+      {
+        path: 'combination',
+        component: RxCombinationComponent
+      },
+      {
+        path: 'mortgage',
+        component: MortgageCalculatorComponent
+      },
+      {
+        path: 'subject',
+        component: RxSubjectComponent
+      }
+    ]
   },
   {
     path: 'members',
@@ -64,7 +69,8 @@ const routes: Routes = [
     RxRateLimitingComponent,
     RxTransformationComponent,
     RxCombinationComponent,
-    MortgageCalculatorComponent
+    MortgageCalculatorComponent,
+    RxSubjectComponent
   ],
   imports: [
     CommonModule,

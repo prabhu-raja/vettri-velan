@@ -37,4 +37,8 @@ export class SampleBoardComponent implements OnInit {
     this.router.navigateByUrl('/sample/mortgage');
   }
 
+  navtoSubject() {
+    this.router.navigateByUrl('/sample/subject');
+  }
+
 }
