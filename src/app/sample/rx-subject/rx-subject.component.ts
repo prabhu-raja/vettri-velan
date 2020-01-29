@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, interval } from 'rxjs';
-import { tap, share, take } from 'rxjs/operators';
+import { Subject, interval, Observable } from 'rxjs';
+import { tap, share, take, multicast } from 'rxjs/operators';
+import { MulticastOperator } from 'rxjs/internal/operators/multicast';
 
 @Component({
   selector: 'app-rx-subject',
@@ -13,7 +14,8 @@ export class RxSubjectComponent implements OnInit {
 
   ngOnInit() {
     // this.kickStart();
-    this.playMulticast();
+    // this.beforeMulticast();
+    this.afterMulticast();
   }
 
   kickStart() {
@@ -60,18 +62,46 @@ export class RxSubjectComponent implements OnInit {
     */
   }
 
-  playMulticast() {
+  beforeMulticast() {
     const observer = {
       next: val => console.log('next', val),
       error: err => console.log('err', err),
       complete: () => console.log('complete')
     };
     const subject = new Subject();
-    const interval$ = interval(1500).pipe(tap(val => console.log('interval', val)));
+    const interval$ = interval(1500).pipe(
+      take(10),
+      tap(val => console.log('interval', val)),
+    );
 
     interval$.subscribe(subject);
     const subOne = subject.subscribe(observer);
     const subTwo = subject.subscribe(observer);
+  }
+
+  afterMulticast() {
+    const observer = {
+      next: val => console.log('next', val),
+      error: err => console.log('err', err),
+      complete: () => console.log('complete')
+    };
+    const interval$ = interval(1000).pipe(
+      take(10),
+      tap(val => console.log('interval', val)),
+    );
+    const multicastedInterval$ = interval$.pipe(
+      multicast(() => new Subject())
+    ) as any;
+    multicastedInterval$.connect();
+
+    const subOne = multicastedInterval$.subscribe(observer);
+    const subTwo = multicastedInterval$.subscribe(observer);
+
+    setTimeout(() => {
+      // behind the scene subscription unsubscribed but inter is still running
+      subOne.unsubscribe();
+      subTwo.unsubscribe();
+    }, 4000);
   }
 
 }
