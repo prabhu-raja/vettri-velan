@@ -12,7 +12,8 @@ export class RxSubjectComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.kickStart();
+    // this.kickStart();
+    this.playMulticast();
   }
 
   kickStart() {
@@ -57,6 +58,20 @@ export class RxSubjectComponent implements OnInit {
     next 1
     next 1
     */
+  }
+
+  playMulticast() {
+    const observer = {
+      next: val => console.log('next', val),
+      error: err => console.log('err', err),
+      complete: () => console.log('complete')
+    };
+    const subject = new Subject();
+    const interval$ = interval(1500).pipe(tap(val => console.log('interval', val)));
+
+    interval$.subscribe(subject);
+    const subOne = subject.subscribe(observer);
+    const subTwo = subject.subscribe(observer);
   }
 
 }
