@@ -92,15 +92,14 @@ export class RxSubjectComponent implements OnInit {
     const multicastedInterval$ = interval$.pipe(
       multicast(() => new Subject())
     ) as any;
-    multicastedInterval$.connect();
+    const connectedSub = multicastedInterval$.connect();
 
     const subOne = multicastedInterval$.subscribe(observer);
     const subTwo = multicastedInterval$.subscribe(observer);
 
     setTimeout(() => {
-      // behind the scene subscription unsubscribed but inter is still running
-      subOne.unsubscribe();
-      subTwo.unsubscribe();
+      // now both interval and subscription unsubscribed
+      connectedSub.unsubscribe();
     }, 4000);
   }
 
