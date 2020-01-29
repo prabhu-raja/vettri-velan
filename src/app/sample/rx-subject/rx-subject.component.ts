@@ -88,15 +88,10 @@ export class RxSubjectComponent implements OnInit {
     const interval$ = interval(1000).pipe(
       take(10),
       tap(val => console.log('interval', val)),
+      share()
     );
-    const multicastedInterval$ = interval$.pipe(
-      multicast(() => new Subject()),
-      refCount()
-    ) as any;
-    multicastedInterval$.connect();
-
-    const subOne = multicastedInterval$.subscribe(observer);
-    const subTwo = multicastedInterval$.subscribe(observer);
+    const subOne = interval$.subscribe(observer);
+    const subTwo = interval$.subscribe(observer);
 
     setTimeout(() => {
       // another way of unsubscribed
