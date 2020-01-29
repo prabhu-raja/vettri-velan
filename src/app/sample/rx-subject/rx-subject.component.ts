@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject, interval, Observable } from 'rxjs';
-import { tap, share, take, multicast } from 'rxjs/operators';
+import { tap, share, take, multicast, refCount } from 'rxjs/operators';
 import { MulticastOperator } from 'rxjs/internal/operators/multicast';
 
 @Component({
@@ -90,16 +90,18 @@ export class RxSubjectComponent implements OnInit {
       tap(val => console.log('interval', val)),
     );
     const multicastedInterval$ = interval$.pipe(
-      multicast(() => new Subject())
+      multicast(() => new Subject()),
+      refCount()
     ) as any;
-    const connectedSub = multicastedInterval$.connect();
+    multicastedInterval$.connect();
 
     const subOne = multicastedInterval$.subscribe(observer);
     const subTwo = multicastedInterval$.subscribe(observer);
 
     setTimeout(() => {
-      // now both interval and subscription unsubscribed
-      connectedSub.unsubscribe();
+      // another way of unsubscribed
+      subOne.unsubscribe();
+      subTwo.unsubscribe();
     }, 4000);
   }
 
