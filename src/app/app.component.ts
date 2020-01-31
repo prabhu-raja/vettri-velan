@@ -14,7 +14,8 @@ import {
   takeWhile,
   takeUntil,
   distinctUntilChanged,
-  distinctUntilKeyChanged
+  distinctUntilKeyChanged,
+  share
 } from 'rxjs/operators';
 
 @Component({
@@ -38,10 +39,54 @@ export class AppComponent implements OnInit {
     // this.practiseTakeUntil();
     // this.practiseDistinctUntilChanged();
     // this.playCold();
+    // this.playHot();
   }
 
   playCold() {
-    interval(1000).pipe(take(5));
+    // This is like watching Netflix
+    const interval$ = interval(1000).pipe(take(5));
+    interval$.subscribe(val => console.log('subOne🐰 - ', val));
+    setTimeout(() => {
+      interval$.subscribe(val => console.log('subTwo🐢 - ', val));
+    }, 3000);
+
+    /*
+    Outout Console:
+    subOne🐰 -  0
+    subOne🐰 -  1
+    subOne🐰 -  2
+    subOne🐰 -  3
+    subTwo🐢 -  0
+    subOne🐰 -  4
+    subTwo🐢 -  1
+    subTwo🐢 -  2
+    subTwo🐢 -  3
+    subTwo🐢 -  4
+    */
+  }
+
+  playHot() {
+    // This is like watching live TV show
+    const interval$ = interval(1000)
+      .pipe(
+        take(5),
+        share()
+      );
+    interval$.subscribe(val => console.log('subOne🐰 - ', val));
+    setTimeout(() => {
+      interval$.subscribe(val => console.log('subTwo🐢 - ', val));
+    }, 3000);
+
+    /*
+    Output Console:
+    subOne🐰 -  0
+    subOne🐰 -  1
+    subOne🐰 -  2
+    subOne🐰 -  3
+    subTwo🐢 -  3
+    subOne🐰 -  4
+    subTwo🐢 -  4
+    */
   }
 
   section1() {
