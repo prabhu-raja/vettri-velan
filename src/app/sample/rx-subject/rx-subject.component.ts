@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, interval, Observable, BehaviorSubject, ReplaySubject, fromEvent } from 'rxjs';
+import { Subject, interval, Observable, BehaviorSubject, ReplaySubject, fromEvent, AsyncSubject } from 'rxjs';
 import { tap, share, take, multicast, refCount, withLatestFrom, mergeMapTo, pluck, shareReplay } from 'rxjs/operators';
 import { MulticastOperator } from 'rxjs/internal/operators/multicast';
 import { ObservableStoreService } from 'src/app/app-shared/services/observable-store.service';
@@ -25,8 +25,9 @@ export class RxSubjectComponent implements OnInit {
     // this.kickReplaySubject();
     // this.bufferReplaySubject();
     // this.anotherBufferReplaySubject();
-    this.kickShareReplay();
+    // this.kickShareReplay();
     // this.withoutShareReplay();
+    this.kickAsyncSubject();
 
     // this.storeService.stateChanges().subscribe(console.log);
   }
@@ -257,6 +258,22 @@ export class RxSubjectComponent implements OnInit {
       clickRequest$.pipe(pluck('response')).subscribe(val => console.log('subTwo', val));
     }, 4000);
 
+  }
+
+  kickAsyncSubject() {
+    // * AsyncSubject will emit last single value only after completes
+    const asyncSub = new AsyncSubject();
+    asyncSub.subscribe(val => console.log('1sub', val));
+    asyncSub.subscribe(val => console.log('2sub', val));
+    asyncSub.next('Hello Canada');
+    asyncSub.next('Hello Germany');
+    asyncSub.next('Goodbye');
+    asyncSub.complete();
+    /*
+    Output:
+    1sub Goodbye
+    2sub Goodbye
+    */
   }
 
 }
