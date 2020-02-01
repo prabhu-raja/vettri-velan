@@ -11,7 +11,6 @@ export class ObservableStoreService {
   stateUpdates: Subject<User>;
 
   constructor() {
-    debugger;
     const initialState: User = {name: 'Ryan', isAuthenticated: false};
     this.store = new BehaviorSubject(initialState);
     this.stateUpdates = new Subject();

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, interval, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, interval, Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { tap, share, take, multicast, refCount, withLatestFrom } from 'rxjs/operators';
 import { MulticastOperator } from 'rxjs/internal/operators/multicast';
 import { ObservableStoreService } from 'src/app/app-shared/services/observable-store.service';
@@ -20,7 +20,11 @@ export class RxSubjectComponent implements OnInit {
     // this.beforeMulticast();
     // this.afterMulticast();
     // this.normalSubject();
-    this.normalBehaviorSubject();
+    // this.normalBehaviorSubject();
+    // this.kickReplaySubject();
+    // this.bufferReplaySubject();
+    this.anotherBufferReplaySubject();
+
     this.storeService.stateChanges().subscribe(console.log);
   }
 
@@ -114,6 +118,7 @@ export class RxSubjectComponent implements OnInit {
     };
     const subject = new Subject();
     //
+    subject.next('Test');
     const oneSub = subject.subscribe(val => console.log('oneSub', val));
     subject.next('Hello');
     const twoSub = subject.subscribe(val => console.log('twoSub', val));
@@ -151,6 +156,67 @@ export class RxSubjectComponent implements OnInit {
     twoBS Hello 🇩🇪🇩🇪🇩🇪🇩🇪
     oneBS World
     twoBS World
+    */
+  }
+
+  kickReplaySubject() {
+    const rp = new ReplaySubject();
+    rp.next('111');
+    rp.next('222');
+    const oneSub = rp.subscribe(val => console.log('oneRPS', val));
+    rp.next('Hello');
+    rp.next('Hello🇨🇦🇨🇦🇨🇦🇨🇦');
+    rp.next('Hello 🇩🇪🇩🇪🇩🇪🇩🇪');
+    const twoSub = rp.subscribe(val => console.log('twoRPS', val));
+    rp.next('World');
+    /*
+    Output:
+    oneRPS 111
+    oneRPS 222
+    oneRPS Hello
+    oneRPS Hello🇨🇦🇨🇦🇨🇦🇨🇦
+    oneRPS Hello 🇩🇪🇩🇪🇩🇪🇩🇪
+    twoRPS 111
+    twoRPS 222
+    twoRPS Hello
+    twoRPS Hello🇨🇦🇨🇦🇨🇦🇨🇦
+    twoRPS Hello 🇩🇪🇩🇪🇩🇪🇩🇪
+    oneRPS World
+    twoRPS World
+    */
+  }
+
+  bufferReplaySubject() {
+    const rp = new ReplaySubject(2);
+    rp.next('111');
+    rp.next('222');
+    rp.next('333');
+    rp.next('444');
+    rp.subscribe(val => console.log('bufferRPS', val));
+    /*
+    Output:
+    bufferRPS 333
+    bufferRPS 444
+    */
+  }
+  anotherBufferReplaySubject() {
+    const rp = new ReplaySubject(2);
+    rp.next('111');
+    rp.next('222');
+    rp.next('333');
+    rp.next('444');
+    rp.subscribe(val => console.log('bufferRPS', val));
+    rp.next('555');
+    rp.next('666');
+    rp.next('777');
+    /*
+    ! Here buffering only before subscribe but no buffering after subscribe
+    Output:
+    bufferRPS 333
+    bufferRPS 444
+    bufferRPS 555
+    bufferRPS 666
+    bufferRPS 777
     */
   }
 
