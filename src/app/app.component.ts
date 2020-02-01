@@ -17,6 +17,7 @@ import {
   distinctUntilKeyChanged,
   share
 } from 'rxjs/operators';
+import { ObservableStoreService } from './app-shared/services/observable-store.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,10 @@ import {
 })
 export class AppComponent implements OnInit {
   title = 'vettri-velan';
+
+  constructor(
+    private storeService: ObservableStoreService
+    ) { }
 
   ngOnInit(): void {
     // this.section1();
@@ -40,6 +45,8 @@ export class AppComponent implements OnInit {
     // this.practiseDistinctUntilChanged();
     // this.playCold();
     // this.playHot();
+    this.storeService.selectState('name').subscribe(console.log);
+    this.storeService.updateState({name: 'Joe', isAuthenticated: true});
   }
 
   playCold() {

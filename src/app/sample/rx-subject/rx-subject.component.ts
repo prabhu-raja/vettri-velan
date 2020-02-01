@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subject, interval, Observable, BehaviorSubject } from 'rxjs';
 import { tap, share, take, multicast, refCount, withLatestFrom } from 'rxjs/operators';
 import { MulticastOperator } from 'rxjs/internal/operators/multicast';
+import { ObservableStoreService } from 'src/app/app-shared/services/observable-store.service';
 
 @Component({
   selector: 'app-rx-subject',
@@ -10,7 +11,9 @@ import { MulticastOperator } from 'rxjs/internal/operators/multicast';
 })
 export class RxSubjectComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private storeService: ObservableStoreService
+  ) { }
 
   ngOnInit() {
     // this.kickStart();
@@ -18,6 +21,7 @@ export class RxSubjectComponent implements OnInit {
     // this.afterMulticast();
     // this.normalSubject();
     this.normalBehaviorSubject();
+    this.storeService.stateChanges().subscribe(console.log);
   }
 
   kickStart() {
