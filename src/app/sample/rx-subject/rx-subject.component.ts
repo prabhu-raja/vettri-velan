@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject, interval, Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
-import { tap, share, take, multicast, refCount, withLatestFrom } from 'rxjs/operators';
+import { Subject, interval, Observable, BehaviorSubject, ReplaySubject, fromEvent } from 'rxjs';
+import { tap, share, take, multicast, refCount, withLatestFrom, mergeMapTo, pluck, shareReplay } from 'rxjs/operators';
 import { MulticastOperator } from 'rxjs/internal/operators/multicast';
 import { ObservableStoreService } from 'src/app/app-shared/services/observable-store.service';
+import { ajax } from 'rxjs/ajax';
 
 @Component({
   selector: 'app-rx-subject',
@@ -23,9 +24,11 @@ export class RxSubjectComponent implements OnInit {
     // this.normalBehaviorSubject();
     // this.kickReplaySubject();
     // this.bufferReplaySubject();
-    this.anotherBufferReplaySubject();
+    // this.anotherBufferReplaySubject();
+    this.kickShareReplay();
+    // this.withoutShareReplay();
 
-    this.storeService.stateChanges().subscribe(console.log);
+    // this.storeService.stateChanges().subscribe(console.log);
   }
 
   kickStart() {
@@ -199,6 +202,7 @@ export class RxSubjectComponent implements OnInit {
     bufferRPS 444
     */
   }
+
   anotherBufferReplaySubject() {
     const rp = new ReplaySubject(2);
     rp.next('111');
@@ -218,6 +222,41 @@ export class RxSubjectComponent implements OnInit {
     bufferRPS 666
     bufferRPS 777
     */
+  }
+
+  kickShareReplay() {
+    const ajax$ = ajax('https://api.github.com/users/octocat');
+    const click$ = fromEvent(document, 'click');
+    const clickRequest$ = click$
+      .pipe(
+        tap(() => console.log('Clicker')),
+        mergeMapTo(ajax$),
+        // share() // * If you are not concerning about late subscribers and previous values use share
+        shareReplay() // * If you are concerning about late subscribers and old values use shareReplay
+      );
+
+    clickRequest$.pipe(pluck('response')).subscribe(val => console.log('subOne', val));
+
+    setTimeout(() => {
+      clickRequest$.pipe(pluck('response')).subscribe(val => console.log('subTwo', val));
+    }, 5000);
+
+  }
+
+  withoutShareReplay() {
+    const ajax$ = ajax('https://api.github.com/users/octocat');
+    const click$ = fromEvent(document, 'click');
+    const clickRequest$ = click$
+      .pipe(
+        mergeMapTo(ajax$),
+      );
+
+    clickRequest$.pipe(pluck('response')).subscribe(val => console.log('subOne', val));
+
+    setTimeout(() => {
+      clickRequest$.pipe(pluck('response')).subscribe(val => console.log('subTwo', val));
+    }, 4000);
+
   }
 
 }

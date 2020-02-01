@@ -45,8 +45,8 @@ export class AppComponent implements OnInit {
     // this.practiseDistinctUntilChanged();
     // this.playCold();
     // this.playHot();
-    this.storeService.selectState('name').subscribe(console.log);
-    this.storeService.updateState({name: 'Joe', isAuthenticated: true});
+    // this.storeService.selectState('name').subscribe(console.log);
+    // this.storeService.updateState({name: 'Joe', isAuthenticated: true});
   }
 
   playCold() {
