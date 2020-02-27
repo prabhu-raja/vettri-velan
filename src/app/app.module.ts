@@ -30,6 +30,10 @@ const routes: Routes = [
     canLoad: [SampleLoadGuard],
     loadChildren: './sample/sample.module#SampleModule'
   },
+  {
+    path: 'html-five',
+    loadChildren: './html-five/html-five.module#HtmlFiveModule'
+  },
   { path: '**', component: NotfoundComponent},
 ];
 
