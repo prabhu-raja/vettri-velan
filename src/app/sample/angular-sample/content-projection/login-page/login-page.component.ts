@@ -12,4 +12,8 @@ export class LoginPageComponent implements OnInit {
   ngOnInit() {
   }
 
+  rememberUser(val: boolean) {
+    console.log('Remember User', val);
+  }
+
 }
