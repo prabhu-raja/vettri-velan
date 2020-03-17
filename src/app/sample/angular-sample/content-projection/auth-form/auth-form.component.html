@@ -24,6 +24,9 @@
     <!-- Check box to remember -->
     <ng-content select="app-auth-remember"></ng-content>
   </div>
+  <div *ngIf="showMsg">
+    You will be logged in for 30 days
+  </div>
   <div class="row">
     <!-- Button -->
     <ng-content select="button"></ng-content>
