@@ -15,6 +15,7 @@ import { RxCombinationComponent } from './rx-combination/rx-combination.componen
 import { MortgageCalculatorComponent } from './mortgage-calculator/mortgage-calculator.component';
 import { RxSubjectComponent } from './rx-subject/rx-subject.component';
 
+
 const routes: Routes = [
   {
     path: '',
@@ -57,6 +58,14 @@ const routes: Routes = [
     path: 'members',
     canActivate: [SampleActivateGuard],
     component: BoardMemberComponent
+  },
+  {
+    path: 'test',
+    loadChildren: './test/test.module#TestModule'
+  },
+  {
+    path: 'angular-dashboard',
+    loadChildren: './angular-sample/angular-sample.module#AngularSampleModule'
   }
 ];
 

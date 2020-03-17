@@ -41,4 +41,8 @@ export class SampleBoardComponent implements OnInit {
     this.router.navigateByUrl('/sample/subject');
   }
 
+  navToAngular() {
+    this.router.navigateByUrl('/sample/angular-dashboard');
+  }
+
 }
