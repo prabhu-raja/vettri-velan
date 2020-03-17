@@ -1,4 +1,4 @@
-import { Component, OnInit, ContentChild, AfterContentInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ContentChild, AfterContentInit, OnDestroy, ElementRef } from '@angular/core';
 import { AuthRememberComponent } from 'src/app/sample/angular-sample/content-projection/auth-remember/auth-remember.component';
 import { takeWhile } from 'rxjs/operators';
 
@@ -10,6 +10,7 @@ import { takeWhile } from 'rxjs/operators';
 export class AuthFormComponent implements OnInit, AfterContentInit, OnDestroy {
 
   @ContentChild(AuthRememberComponent, { static: false}) authRemember: AuthRememberComponent;
+  @ContentChild('processor', { static: false}) elmProcess: ElementRef;
   showMsg: boolean;
   alive = true;
   constructor() { }
@@ -25,6 +26,10 @@ export class AuthFormComponent implements OnInit, AfterContentInit, OnDestroy {
           takeWhile(() => this.alive)
         )
         .subscribe(val => this.showMsg = val);
+    }
+    //
+    if (this.elmProcess) {
+      this.elmProcess.nativeElement.innerHTML = 'Modified using Element Ref';
     }
   }
 
