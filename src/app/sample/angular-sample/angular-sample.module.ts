@@ -7,6 +7,7 @@ import { AuthFormComponent } from './content-projection/auth-form/auth-form.comp
 import { LoginPageComponent } from './content-projection/login-page/login-page.component';
 import { CreateAccountPageComponent } from './content-projection/create-account-page/create-account-page.component';
 import { AuthRememberComponent } from './content-projection/auth-remember/auth-remember.component';
+import { AuthMessageComponent } from './content-projection/auth-message/auth-message.component';
 
 const routes: Routes = [
   {
@@ -33,7 +34,8 @@ const routes: Routes = [
     AuthFormComponent,
     LoginPageComponent,
     CreateAccountPageComponent,
-    AuthRememberComponent
+    AuthRememberComponent,
+    AuthMessageComponent
   ],
   imports: [
     CommonModule,
