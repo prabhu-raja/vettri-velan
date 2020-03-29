@@ -4,3 +4,4 @@ function* hello() {
 }
 
 export const iterator = hello();
+// test
