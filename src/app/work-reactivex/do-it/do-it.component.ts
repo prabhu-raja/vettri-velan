@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent, Observable, Observer } from 'rxjs';
+import { fromEvent, Observable, Observer, of, range } from 'rxjs';
 
 @Component({
   selector: 'app-do-it',
@@ -13,7 +13,9 @@ export class DoItComponent implements OnInit {
   ngOnInit() {
     // this.basic();
     // this.basic2();
-    this.operatorFromEvent();
+    // this.operatorFromEvent();
+    // this.operatorOf();
+    this.operatorRange();
   }
 
   private basic() {
@@ -70,6 +72,26 @@ export class DoItComponent implements OnInit {
     setTimeout(() => {
       subTwo.unsubscribe();
     }, 4000);
+  }
+
+  private operatorOf() {
+    const observer: Observer<any> = {
+      next: val => console.log(`value of next is ${val}`),
+      error: err => console.log(`value of error is ${err}`),
+      complete: () => console.log('completed!')
+    };
+    const source$ = of(1, 2, 3, 4, 5);
+    source$.subscribe(observer);
+  }
+
+  private operatorRange() {
+    const observer: Observer<any> = {
+      next: val => console.log(`value of next is ${val}`),
+      error: err => console.log(`value of error is ${err}`),
+      complete: () => console.log('completed!')
+    };
+    const source$ = range(1, 10);
+    source$.subscribe(observer);
   }
 
 }
