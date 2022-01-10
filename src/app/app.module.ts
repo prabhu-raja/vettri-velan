@@ -10,6 +10,7 @@ import { Observable, of } from 'rxjs';
 import { AppSharedModule } from './app-shared/app-shared.module';
 import { SampleLoadGuard } from './app-shared/guards/sample-load.guard';
 import { CountdownTimerComponent } from './components/countdown-timer/countdown-timer.component';
+import { WorkReactivexModule } from './work-reactivex/work-reactivex.module';
 // import { SampleModule } from './sample/sample.module';
 
 export class CustomPreload implements PreloadingStrategy {
@@ -34,6 +35,10 @@ const routes: Routes = [
     path: 'html-five',
     loadChildren: './html-five/html-five.module#HtmlFiveModule'
   },
+  {
+    path: 'rxjs-2',
+    loadChildren: './work-reactivex/work-reactivex.module#WorkReactivexModule'
+  },
   { path: '**', component: NotfoundComponent},
 ];
 
@@ -49,6 +54,7 @@ const routes: Routes = [
     BrowserModule,
     AppSharedModule,
     // SampleModule,
+    WorkReactivexModule,
     RouterModule.forRoot(routes, {
       // preloadingStrategy: PreloadAllModules // * This will preload all lazy load modules
       preloadingStrategy: CustomPreload // * This is custom preload
