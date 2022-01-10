@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent, Observable, Observer, of, range } from 'rxjs';
-
+import { from, fromEvent, Observable, Observer, of, range } from 'rxjs';
+import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
   templateUrl: './do-it.component.html',
@@ -15,7 +15,8 @@ export class DoItComponent implements OnInit {
     // this.basic2();
     // this.operatorFromEvent();
     // this.operatorOf();
-    this.operatorRange();
+    // this.operatorRange();
+    this.operatorFrom();
   }
 
   private basic() {
@@ -92,6 +93,23 @@ export class DoItComponent implements OnInit {
     };
     const source$ = range(1, 10);
     source$.subscribe(observer);
+  }
+
+  private operatorFrom() {
+    const observer: Observer<any> = {
+      next: val => console.log(`value of next is ${val}`),
+      error: err => console.log(`value of error is ${err}`),
+      complete: () => console.log('completed!')
+    };
+    // const source$ = of([1, 2, 3, 4, 5]);
+    const source$ = from([1, 2, 3, 4, 5]);
+    source$.subscribe(observer);
+
+    /**
+     * ?Using the Iterator from JS Generator function
+     */
+    console.log(iterator.next().value);
+    console.log(iterator.next().value); // ! Here we must each and every time. but from operator iterate all at a time.
   }
 
 }
