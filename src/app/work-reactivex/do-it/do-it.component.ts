@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { from, fromEvent, Observable, Observer, of, range } from 'rxjs';
+import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -16,7 +16,9 @@ export class DoItComponent implements OnInit {
     // this.operatorFromEvent();
     // this.operatorOf();
     // this.operatorRange();
-    this.operatorFrom();
+    // this.operatorFrom();
+    // this.operatorInterval();
+    this.operatorTimer();
   }
 
   private basic() {
@@ -110,6 +112,17 @@ export class DoItComponent implements OnInit {
      */
     console.log(iterator.next().value);
     console.log(iterator.next().value); // ! Here we must each and every time. but from operator iterate all at a time.
+  }
+
+  private operatorInterval() {
+    const source$ = interval(1000);
+    source$.subscribe(console.log);
+  }
+
+  private operatorTimer() {
+    // start the timer after 3 sec
+    const source$ = timer(3000, 1000);
+    source$.subscribe(console.log);
   }
 
 }
