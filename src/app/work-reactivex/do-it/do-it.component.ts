@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
-import { filter, map, mapTo, pluck, reduce, scan, take } from 'rxjs/operators';
+import { filter, map, mapTo, pluck, reduce, scan, take, tap } from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -20,6 +20,7 @@ export class DoItComponent implements OnInit {
     // this.operatorFrom();
     // this.operatorInterval();
     // this.operatorTimer();
+    // this.operatorTap();
     this.countDownTimer();
 
     /**
@@ -148,6 +149,19 @@ export class DoItComponent implements OnInit {
     source$.subscribe(console.log);
   }
 
+  private operatorTap() {
+    of(1, 2, 3, 4, 5)
+      .pipe(
+        tap(val => console.log(`Before map ${val}`)),
+        map(val => val * 10),
+        tap({
+          next: val => console.log(`After map ${val}`),
+          complete: () => console.log(`Completed!`)
+        }),
+      )
+      .subscribe(val => console.log(`Subscribed 🚰 Val ${val}`));
+  }
+
   private transformationMap() {
     // of(1, 2, 3, 4, 5)
     //   .pipe(map(val => val * 10))
@@ -241,7 +255,8 @@ export class DoItComponent implements OnInit {
           console.log(`accumulator  ${accumulator} | currentValue  ${currentValue}`);
           return accumulator + currentValue;
         }, 10),
-        filter(val => val >= 0)
+        tap(val => console.log(`Before filter ${val}`)),
+        filter(val => val >= 0),
       )
       .subscribe(val => console.log(`countdown ${val}`));
   }
