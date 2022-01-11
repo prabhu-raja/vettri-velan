@@ -20,6 +20,7 @@ export class DoItComponent implements OnInit {
     // this.operatorFrom();
     // this.operatorInterval();
     // this.operatorTimer();
+    this.countDownTimer();
 
     /**
      * Transformation Operator Starts
@@ -28,7 +29,7 @@ export class DoItComponent implements OnInit {
     // this.transformationPluck();
     // this.transformationMapTo();
     // this.transformationReduce();
-    this.transformationScan();
+    // this.transformationScan();
     /**
      * Transformation Operator Ends
      */
@@ -230,6 +231,19 @@ export class DoItComponent implements OnInit {
 
     keycode$.subscribe(val => console.log(`Pluck is ${val}`));
     enter$.subscribe(val => console.log(`Filter only ${val}`));
+  }
+
+  private countDownTimer() {
+    interval(1000)
+      .pipe(
+        mapTo(-1),
+        scan((accumulator, currentValue) => {
+          console.log(`accumulator  ${accumulator} | currentValue  ${currentValue}`);
+          return accumulator + currentValue;
+        }, 10),
+        filter(val => val >= 0)
+      )
+      .subscribe(val => console.log(`countdown ${val}`));
   }
 
 }
