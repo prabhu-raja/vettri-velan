@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
+import { filter, map, mapTo, pluck, reduce, scan, take } from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -18,7 +19,28 @@ export class DoItComponent implements OnInit {
     // this.operatorRange();
     // this.operatorFrom();
     // this.operatorInterval();
-    this.operatorTimer();
+    // this.operatorTimer();
+
+    /**
+     * Transformation Operator Starts
+     */
+    // this.transformationMap();
+    // this.transformationPluck();
+    // this.transformationMapTo();
+    // this.transformationReduce();
+    this.transformationScan();
+    /**
+     * Transformation Operator Ends
+     */
+
+
+    /**
+     * Filtering Operator Starts
+     */
+    // this.filteringFilter();
+    /**
+     * Filtering Operator Ends
+     */
   }
 
   private basic() {
@@ -123,6 +145,91 @@ export class DoItComponent implements OnInit {
     // start the timer after 3 sec
     const source$ = timer(3000, 1000);
     source$.subscribe(console.log);
+  }
+
+  private transformationMap() {
+    // of(1, 2, 3, 4, 5)
+    //   .pipe(map(val => val * 10))
+    //   .subscribe(console.log);
+
+    // const keyup$ = fromEvent(document, 'keyup');
+    // const keycode$ = keyup$.pipe(
+    //   map((event: KeyboardEvent) => event.code)
+    // );
+    // keycode$.subscribe(console.log);
+
+    fromEvent(document, 'keyup')
+      .pipe(
+        map((event: KeyboardEvent) => event.code)
+      )
+      .subscribe(console.log);
+  }
+
+  private transformationPluck() {
+    // const keyup$ = fromEvent(document, 'keyup');
+    // const keycode$ = keyup$.pipe(
+    //   pluck('code')
+    // );
+    // keycode$.subscribe(val => console.log(`Pluck is ${val}`));
+
+    fromEvent(document, 'keyup')
+      .pipe(
+        pluck('code')
+      )
+      .subscribe(val => console.log(`Pluck Value ${val}`));
+  }
+
+  private transformationMapTo() {
+    const keyup$ = fromEvent(document, 'keyup');
+    const keycode$ = keyup$.pipe(
+      mapTo('🔥🥶')
+    );
+    keycode$.subscribe(val => console.log(`mapTo is ${val}`));
+  }
+
+  private transformationReduce() {
+    /*
+    const numbers = [1, 2, 3, 4, 5];
+    const total = numbers.reduce((accumulator, currentValue) => {
+      console.log(`accumulator - ${accumulator} | currentValue - ${currentValue}`);
+      return accumulator + currentValue;
+    }, 0);
+    console.log(`Total - ${total}`);
+    */
+
+    interval(1000)
+      .pipe(
+        take(5),
+        reduce((accumulator, currentValue) => {
+          console.log(`accumulator - ${accumulator} | currentValue - ${currentValue}`);
+          return accumulator + currentValue;
+        }, 0)
+      )
+      .subscribe({
+        next: total => console.log(`Total - ${total}`),
+        complete: () => console.log('Completed!')
+      });
+  }
+
+  transformationScan() {
+    const numbers = [1, 2, 3, 4, 5];
+    from(numbers)
+      .pipe(scan((accumulator, currentValue) => accumulator + currentValue, 0))
+      .subscribe(val => console.log(`scan value - ${val}`));
+  }
+
+  private filteringFilter() {
+    // of(1, 2, 3, 4, 5)
+    //   .pipe(filter(val => val > 2))
+    //   .subscribe(console.log);
+    const keyup$ = fromEvent(document, 'keyup');
+    const keycode$ = keyup$
+      .pipe(pluck('code'));
+    const enter$ = keycode$
+      .pipe(filter(val => val === 'Enter'));
+
+    keycode$.subscribe(val => console.log(`Pluck is ${val}`));
+    enter$.subscribe(val => console.log(`Filter only ${val}`));
   }
 
 }
