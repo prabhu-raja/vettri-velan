@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
-import { filter, map, mapTo, pluck, reduce, scan, take, tap } from 'rxjs/operators';
+import { filter, first, map, mapTo, pluck, reduce, scan, take, tap } from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -21,7 +21,7 @@ export class DoItComponent implements OnInit {
     // this.operatorInterval();
     // this.operatorTimer();
     // this.operatorTap();
-    this.countDownTimer();
+    // this.countDownTimer();
 
     /**
      * Transformation Operator Starts
@@ -40,6 +40,8 @@ export class DoItComponent implements OnInit {
      * Filtering Operator Starts
      */
     // this.filteringFilter();
+    // this.filteringTake();
+    this.filteringFirst();
     /**
      * Filtering Operator Ends
      */
@@ -226,7 +228,7 @@ export class DoItComponent implements OnInit {
       });
   }
 
-  transformationScan() {
+  private transformationScan() {
     const numbers = [1, 2, 3, 4, 5];
     from(numbers)
       .pipe(scan((accumulator, currentValue) => accumulator + currentValue, 0))
@@ -245,6 +247,48 @@ export class DoItComponent implements OnInit {
 
     keycode$.subscribe(val => console.log(`Pluck is ${val}`));
     enter$.subscribe(val => console.log(`Filter only ${val}`));
+  }
+
+  private filteringTake() {
+    // of(1, 2, 3, 4, 5)
+    //   .pipe(take(3))
+    //   .subscribe({
+    //     next: val => console.log(`Value is ${val}`),
+    //     complete: () => console.log('Take Completed!')
+    //   });
+    fromEvent(document, 'click')
+      .pipe(
+        map((evt: MouseEvent) => ({
+          x: evt.clientX,
+          y: evt.clientY
+        })),
+        take(1)
+      )
+      .subscribe({
+        next: console.log,
+        complete: () => console.log('Take Completed!')
+      });
+  }
+
+  private filteringFirst() {
+    // of(1, 2, 3, 4, 5)
+    //   .pipe(first(val => val > 2)) // ! First will do Filter and Take(1)
+    //   .subscribe({
+    //     next: val => console.log(`Value is ${val}`),
+    //     complete: () => console.log('Take Completed!')
+    //   });
+    fromEvent(document, 'click')
+      .pipe(
+        map((evt: MouseEvent) => ({
+          x: evt.clientX,
+          y: evt.clientY
+        })),
+        first(({x}) => x > 200 ) // ! First will do Filter and Take(1)
+      )
+      .subscribe({
+        next: console.log,
+        complete: () => console.log('Take Completed!')
+      });
   }
 
   private countDownTimer() {
