@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
-import { filter, first, map, mapTo, pluck, reduce, scan, take, tap } from 'rxjs/operators';
+import { filter, first, map, mapTo, pluck, reduce, scan, take, takeWhile, tap } from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -21,7 +21,7 @@ export class DoItComponent implements OnInit {
     // this.operatorInterval();
     // this.operatorTimer();
     // this.operatorTap();
-    // this.countDownTimer();
+    this.countDownTimer();
 
     /**
      * Transformation Operator Starts
@@ -41,7 +41,8 @@ export class DoItComponent implements OnInit {
      */
     // this.filteringFilter();
     // this.filteringTake();
-    this.filteringFirst();
+    // this.filteringFirst();
+    // this.filteringTakeWhile();
     /**
      * Filtering Operator Ends
      */
@@ -275,7 +276,7 @@ export class DoItComponent implements OnInit {
     //   .pipe(first(val => val > 2)) // ! First will do Filter and Take(1)
     //   .subscribe({
     //     next: val => console.log(`Value is ${val}`),
-    //     complete: () => console.log('Take Completed!')
+    //     complete: () => console.log('First Completed!')
     //   });
     fromEvent(document, 'click')
       .pipe(
@@ -287,7 +288,33 @@ export class DoItComponent implements OnInit {
       )
       .subscribe({
         next: console.log,
-        complete: () => console.log('Take Completed!')
+        complete: () => console.log('First Completed!')
+      });
+  }
+
+  private filteringTakeWhile() {
+    /*
+    of(1, 2, 3, 4, 5)
+      .pipe(takeWhile(val => val < 3, true)) // ! TakeWhile will run until condition is false
+       ! if 2nd param is true, then it will emit last false value
+       ! i.e here it will emit until 3
+      .subscribe({
+        next: val => console.log(`Value is ${val}`),
+        complete: () => console.log('TakeWhile Completed!')
+      });
+    */
+    fromEvent(document, 'click')
+      .pipe(
+        map((evt: MouseEvent) => ({
+          x: evt.clientX,
+          y: evt.clientY
+        })),
+        takeWhile(({x}) => x > 200, true) // ! TakeWhile will run until condition is false
+        // ! if 2nd param is true, then it will emit last false value
+      )
+      .subscribe({
+        next: console.log,
+        complete: () => console.log('TakeWhile Completed!')
       });
   }
 
@@ -298,11 +325,14 @@ export class DoItComponent implements OnInit {
         scan((accumulator, currentValue) => {
           console.log(`accumulator  ${accumulator} | currentValue  ${currentValue}`);
           return accumulator + currentValue;
-        }, 10),
+        }, 5),
         tap(val => console.log(`Before filter ${val}`)),
-        filter(val => val >= 0),
+        takeWhile(val => val >= 0),
       )
-      .subscribe(val => console.log(`countdown ${val}`));
+      .subscribe({
+        next: val => console.log(`countdown ${val}`),
+        complete: () => console.log('⏳ completed')
+      });
   }
 
 }
