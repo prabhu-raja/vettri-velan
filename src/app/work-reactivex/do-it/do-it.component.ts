@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
-import { distinctUntilChanged, distinctUntilKeyChanged, filter, first, map, mapTo, pluck, reduce, scan, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { debounce, debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, first, map, mapTo, pluck, reduce, scan, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -48,7 +48,9 @@ export class DoItComponent implements OnInit {
     // this.filteringTakeWhile();
     // this.filteringTakeUntil();
     // this.filteringDistinctUntilChanged();
-    this.filteringDistinctUntilKeyChanged();
+    // this.filteringDistinctUntilKeyChanged();
+    // this.filteringDebounceTime();
+    this.filteringDebounce();
     /**
      * Filtering Operator Ends
      */
@@ -368,7 +370,30 @@ export class DoItComponent implements OnInit {
       map((val: any) => val.name),
     );
     name$.subscribe(console.log);
+  }
 
+  private filteringDebounceTime() {
+    const inbputbox = document.getElementById('text-input');
+    const input$ = fromEvent(inbputbox, 'keyup');
+    input$
+      .pipe(
+        debounceTime(1000),
+        pluck('target', 'value'),
+        distinctUntilChanged()
+      )
+      .subscribe(console.log);
+  }
+
+  private filteringDebounce() {
+    const inbputbox = document.getElementById('text-input');
+    const input$ = fromEvent(inbputbox, 'keyup');
+    input$
+      .pipe(
+        debounce(() => interval(500)),
+        pluck('target', 'value'),
+        distinctUntilChanged()
+      )
+      .subscribe(console.log);
   }
 
   private countDownTimer() {
