@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
-import { filter, first, map, mapTo, pluck, reduce, scan, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { distinctUntilChanged, distinctUntilKeyChanged, filter, first, map, mapTo, pluck, reduce, scan, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -24,7 +24,7 @@ export class DoItComponent implements OnInit {
     // this.operatorInterval();
     // this.operatorTimer();
     // this.operatorTap();
-    this.countDownTimer();
+    // this.countDownTimer();
 
     /**
      * Transformation Operator Starts
@@ -47,6 +47,8 @@ export class DoItComponent implements OnInit {
     // this.filteringFirst();
     // this.filteringTakeWhile();
     // this.filteringTakeUntil();
+    // this.filteringDistinctUntilChanged();
+    this.filteringDistinctUntilKeyChanged();
     /**
      * Filtering Operator Ends
      */
@@ -331,6 +333,42 @@ export class DoItComponent implements OnInit {
         next: console.log,
         complete: () => console.log('Take Until completed!')
       });
+  }
+
+  private filteringDistinctUntilChanged() {
+    // https://app.ultimatecourses.com/course/rxjs-basics/ignore-non-unique-values-using-distinctuntilchanged
+    // of(1, 2, 3, 3, 3, 4, 5)
+    //   .pipe(distinctUntilChanged())
+    //   .subscribe(console.log);
+    of(1, 2, 3, 3, 3, 4, 5, 3)
+      .pipe(distinctUntilChanged())
+      .subscribe(console.log);
+  }
+
+  private filteringDistinctUntilKeyChanged() {
+    // https://app.ultimatecourses.com/course/rxjs-basics/ignore-non-unique-values-using-distinctuntilchanged
+    interface User {
+        name: string;
+        loggedIn: boolean;
+        token: string;
+    }
+    const user: User[] = [
+      { name: 'Brian', loggedIn: false, token: null },
+      { name: 'Brian', loggedIn: true, token: 'abc' },
+      { name: 'Lara', loggedIn: true, token: 'xyz' },
+      { name: 'Brian', loggedIn: true, token: '123' }
+    ];
+    const state$: Observable<any> = from(user).pipe(
+      scan((accumulator, currentValue) => {
+        return { ...accumulator, ...currentValue };
+      }, {})
+    );
+    const name$ = state$.pipe(
+      distinctUntilKeyChanged('name'),
+      map((val: any) => val.name),
+    );
+    name$.subscribe(console.log);
+
   }
 
   private countDownTimer() {
