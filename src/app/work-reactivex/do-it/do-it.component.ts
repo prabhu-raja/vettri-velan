@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
-import { filter, first, map, mapTo, pluck, reduce, scan, take, takeWhile, tap } from 'rxjs/operators';
+import { filter, first, map, mapTo, pluck, reduce, scan, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -8,6 +8,9 @@ import { iterator } from '../../app.service';
   styleUrls: ['./do-it.component.scss']
 })
 export class DoItComponent implements OnInit {
+  hasCountdownTimer = false;
+  timerValue: number;
+  @ViewChild('btnAbort', {static: true}) btnAbort: ElementRef<HTMLButtonElement>;
 
   constructor() { }
 
@@ -43,6 +46,7 @@ export class DoItComponent implements OnInit {
     // this.filteringTake();
     // this.filteringFirst();
     // this.filteringTakeWhile();
+    // this.filteringTakeUntil();
     /**
      * Filtering Operator Ends
      */
@@ -318,19 +322,38 @@ export class DoItComponent implements OnInit {
       });
   }
 
+  private filteringTakeUntil() {
+    const counter$ = interval(1000);
+    const click$ = fromEvent(document, 'click');
+    counter$
+      .pipe(takeUntil(click$))
+      .subscribe({
+        next: console.log,
+        complete: () => console.log('Take Until completed!')
+      });
+  }
+
   private countDownTimer() {
+    this.hasCountdownTimer = true;
+    const startFrom = 10;
+    this.timerValue = startFrom;
+    const click$ = fromEvent(this.btnAbort.nativeElement, 'click');
     interval(1000)
       .pipe(
         mapTo(-1),
         scan((accumulator, currentValue) => {
           console.log(`accumulator  ${accumulator} | currentValue  ${currentValue}`);
           return accumulator + currentValue;
-        }, 5),
+        }, startFrom),
         tap(val => console.log(`Before filter ${val}`)),
         takeWhile(val => val >= 0),
+        takeUntil(click$)
       )
       .subscribe({
-        next: val => console.log(`countdown ${val}`),
+        next: val => {
+          this.timerValue = val;
+          console.log(`countdown ${val}`);
+        },
         complete: () => console.log('⏳ completed')
       });
   }
