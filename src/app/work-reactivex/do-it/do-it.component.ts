@@ -15,6 +15,7 @@ import {
   pluck,
   reduce,
   scan,
+  switchMap,
   take,
   takeUntil,
   takeWhile,
@@ -80,6 +81,7 @@ export class DoItComponent implements OnInit {
     // this.flatMergeAll();
     // this.flatMergeMap();
     // this.flatMergeMapCons();
+    this.flatMergeMapVsSwitchMap();
     /**
      * Flattening Operator Ends
      */
@@ -479,9 +481,21 @@ export class DoItComponent implements OnInit {
     //     ),
     //   )
     //   .subscribe(console.log);
+  }
 
-
-
+  private flatMergeMapVsSwitchMap() {
+    const click$ = fromEvent(document, 'click');
+    const interval$  = interval(1000);
+    // ! in mergeMap every click it will create new interval
+    // click$.pipe(
+    //   mergeMap(() => interval$)
+    // )
+    // .subscribe(console.log);
+    // ! in switchMap every click it will clear/unsubscribe the previous interval
+    click$.pipe(
+      switchMap(() => interval$)
+    )
+    .subscribe(console.log);
   }
 
   private countDownTimer() {
