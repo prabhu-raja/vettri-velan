@@ -1,6 +1,25 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
-import { debounce, debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, first, map, mapTo, pluck, reduce, scan, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
+import { ajax } from 'rxjs/ajax';
+import {
+  debounce,
+  debounceTime,
+  distinctUntilChanged,
+  distinctUntilKeyChanged,
+  filter,
+  first,
+  map,
+  mapTo,
+  mergeAll,
+  mergeMap,
+  pluck,
+  reduce,
+  scan,
+  take,
+  takeUntil,
+  takeWhile,
+  tap
+} from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
   selector: 'app-do-it',
@@ -50,9 +69,18 @@ export class DoItComponent implements OnInit {
     // this.filteringDistinctUntilChanged();
     // this.filteringDistinctUntilKeyChanged();
     // this.filteringDebounceTime();
-    this.filteringDebounce();
+    // this.filteringDebounce();
     /**
      * Filtering Operator Ends
+     */
+
+    /**
+     * Flattening Operator Starts
+     */
+    // this.flatMergeAll();
+    this.flatMergeMap();
+    /**
+     * Flattening Operator Ends
      */
   }
 
@@ -394,6 +422,41 @@ export class DoItComponent implements OnInit {
         distinctUntilChanged()
       )
       .subscribe(console.log);
+  }
+
+  private flatMergeAll() {
+    const inbputbox = document.getElementById('text-input');
+    const input$ = fromEvent<any>(inbputbox, 'keyup');
+    const term$ = input$.pipe(map(evt => evt.target.value));
+    // term$
+    //   .pipe(
+    //     debounceTime(1000),
+    //     map(term => ajax.getJSON(`http://api.github.com/users/${term}`)),
+    //   ).subscribe(console.log);
+    // ! if you hover in above subscribe it display as Observable<Observable<unknown>>.subscribe
+    // ! since term$ has one observable and ajax.getJSON returns another observable.
+    // ! To avoid this use mergeAll
+    term$
+      .pipe(
+        debounceTime(1000),
+        map(term => ajax.getJSON(`http://api.github.com/users/${term}`)),
+        mergeAll()
+      ).subscribe(console.log);
+
+  }
+
+  private flatMergeMap() {
+    // ! cloned from the above mergeAll
+    // ! instead of map and mergeAll we may use mergeMap as below
+    const inbputbox = document.getElementById('text-input');
+    const input$ = fromEvent<any>(inbputbox, 'keyup');
+    const term$ = input$.pipe(map(evt => evt.target.value));
+    term$
+      .pipe(
+        debounceTime(1000),
+        mergeMap(term => ajax.getJSON(`http://api.github.com/users/${term}`)),
+      ).subscribe(console.log);
+
   }
 
   private countDownTimer() {
