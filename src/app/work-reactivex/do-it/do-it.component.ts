@@ -78,7 +78,8 @@ export class DoItComponent implements OnInit {
      * Flattening Operator Starts
      */
     // this.flatMergeAll();
-    this.flatMergeMap();
+    // this.flatMergeMap();
+    // this.flatMergeMapCons();
     /**
      * Flattening Operator Ends
      */
@@ -456,6 +457,30 @@ export class DoItComponent implements OnInit {
         debounceTime(1000),
         mergeMap(term => ajax.getJSON(`http://api.github.com/users/${term}`)),
       ).subscribe(console.log);
+  }
+
+  private flatMergeMapCons() {
+    const mousedown$ = fromEvent(document, 'mousedown');
+    const mouseup$ = fromEvent(document, 'mouseup');
+    const interval$ = interval(1000);
+    mousedown$
+      .pipe(
+        mergeMap(() => interval$)
+      )
+      .subscribe(console.log);
+    // ! in above example every mousedown click it will create new interval
+    // ! to avoid we need unsubscribe the inner observable as below
+    // ? But below code is not working
+    // tslint:disable-next-line:max-line-length
+    // ? only works here - no idea 😢 (https://app.ultimatecourses.com/course/rxjs-basics/flatten-inner-observables-as-they-occur-with-mergemap)
+    // mousedown$
+    //   .pipe(
+    //     mergeMap(() => interval$.pipe(takeUntil(mouseup$))
+    //     ),
+    //   )
+    //   .subscribe(console.log);
+
+
 
   }
 
