@@ -81,7 +81,8 @@ export class DoItComponent implements OnInit {
     // this.flatMergeAll();
     // this.flatMergeMap();
     // this.flatMergeMapCons();
-    this.flatMergeMapVsSwitchMap();
+    // this.flatMergeMapVsSwitchMap();
+    this.flatSwitchMap();
     /**
      * Flattening Operator Ends
      */
@@ -496,6 +497,34 @@ export class DoItComponent implements OnInit {
       switchMap(() => interval$)
     )
     .subscribe(console.log);
+  }
+
+  private flatSwitchMap() {
+    // ! in text box search as dog, cat etc
+    const BASE_URL = 'https://api.openbrewerydb.org/breweries';
+    const inbputbox = document.getElementById('text-input');
+    const input$ = fromEvent<any>(inbputbox, 'keyup');
+    const typeaheadContainer = document.getElementById('typeahead-container');
+
+    input$.pipe(
+      debounceTime(200),
+      pluck('target', 'value'),
+      distinctUntilChanged(),
+      switchMap(searchTerm => ajax.getJSON(`${BASE_URL}?by_name=${searchTerm}`))
+    )
+    .subscribe((res: []) => {
+      typeaheadContainer.innerHTML = res.map((val: any) => val.name).join('<br>');
+    });
+    // ! If we try without debounceTime we can see the cancelled request for previous value in network tab
+    // input$.pipe(
+    //   pluck('target', 'value'),
+    //   distinctUntilChanged(),
+    //   switchMap(searchTerm => ajax.getJSON(`${BASE_URL}?by_name=${searchTerm}`))
+    // )
+    // .subscribe((res: []) => {
+    //   typeaheadContainer.innerHTML = res.map((val: any) => val.name).join('<br>');
+    // });
+
   }
 
   private countDownTimer() {
