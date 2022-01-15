@@ -2,4 +2,19 @@
   height: 100vh;
   width: 90vw;
   background-color: rgb(164, 173, 173);
+  .exConcatMap {
+    margin-top: 3rem;
+    text-align: center;
+    border: 1px solid black;
+  }
+  p {
+    margin-top: 20px;
+  }
+
+  .radio-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
+

@@ -2,8 +2,10 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
+  concatMap,
   debounce,
   debounceTime,
+  delay,
   distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
@@ -82,7 +84,8 @@ export class DoItComponent implements OnInit {
     // this.flatMergeMap();
     // this.flatMergeMapCons();
     // this.flatMergeMapVsSwitchMap();
-    this.flatSwitchMap();
+    // this.flatSwitchMap();
+    this.flatConcatMap();
     /**
      * Flattening Operator Ends
      */
@@ -525,6 +528,31 @@ export class DoItComponent implements OnInit {
     //   typeaheadContainer.innerHTML = res.map((val: any) => val.name).join('<br>');
     // });
 
+  }
+
+  private flatConcatMap() {
+    /*
+    const click$ = fromEvent(document, 'click');
+    const interval$ = interval(1000);
+    ! when we click 4 times it will emit syncly. once 1st observable completed wit will emit 2nd.
+    click$.pipe(
+      concatMap(() => (
+        interval$.pipe(take(3)
+      )))
+    )
+    .subscribe(console.log);
+    */
+
+    const saveAnswer = ans => of(`Saved answer is ${ans}`).pipe(delay(1500));
+    const radioBtns = document.querySelectorAll('.radio-option');
+    const answerChanges$ = fromEvent(radioBtns, 'click');
+    answerChanges$.pipe(
+      concatMap((evt: any) => saveAnswer(evt.target.value))
+    )
+    .subscribe({
+      next: val => console.log(val),
+      complete: () => console.log('ConcatMap Complete!')
+    });
   }
 
   private countDownTimer() {
