@@ -87,7 +87,8 @@ export class DoItComponent implements OnInit {
     // this.flatMergeMapVsSwitchMap();
     // this.flatSwitchMap();
     // this.flatConcatMap();
-    this.flatExhaustMap();
+    // this.flatExhaustMap();
+    this.flatMergeMapVsSwitchMapVSConcatMapVsExhaustMap();
     /**
      * Flattening Operator Ends
      */
@@ -586,6 +587,26 @@ export class DoItComponent implements OnInit {
       complete: () => console.log('exhaust complete')
     });
     // ! When user clicks 2 times exhaust will takes the firt and omits the next inner obeervable.
+  }
+  private flatMergeMapVsSwitchMapVSConcatMapVsExhaustMap() {
+    const authenticateUser = () => {
+      return ajax.post('https://reqres.in/api/login', {
+        email: 'eve.holt@reqres.in',
+        password: 'welcome'
+      });
+    };
+    const loginBtn = document.getElementById('login');
+    const click$ = fromEvent(loginBtn, 'click');
+    click$.pipe(
+      // exhaustMap(() => authenticateUser())
+      // mergeMap(() => authenticateUser())
+      // switchMap(() => authenticateUser())
+      concatMap(() => authenticateUser())
+    )
+    .subscribe({
+      next: console.log,
+      complete: () => console.log('exhaust complete')
+    });
   }
 
   private countDownTimer() {
