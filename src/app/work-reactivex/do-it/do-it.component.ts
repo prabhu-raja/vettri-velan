@@ -1,7 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
+import { EMPTY, from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
+  catchError,
   concatMap,
   debounce,
   debounceTime,
@@ -88,7 +89,8 @@ export class DoItComponent implements OnInit {
     // this.flatSwitchMap();
     // this.flatConcatMap();
     // this.flatExhaustMap();
-    this.flatMergeMapVsSwitchMapVSConcatMapVsExhaustMap();
+    // this.flatMergeMapVsSwitchMapVSConcatMapVsExhaustMap();
+    this.flatCatchError();
     /**
      * Flattening Operator Ends
      */
@@ -606,6 +608,36 @@ export class DoItComponent implements OnInit {
     .subscribe({
       next: console.log,
       complete: () => console.log('exhaust complete')
+    });
+  }
+
+  private flatCatchError() {
+    // ! To get error select offline from throttle dropdown in dev tools
+    const BASE_URL = 'https://api.openbrewerydb.org/breweries';
+    const inbputbox = document.getElementById('text-input');
+    const input$ = fromEvent<any>(inbputbox, 'keyup');
+    const typeaheadContainer = document.getElementById('typeahead-container');
+
+    input$.pipe(
+      debounceTime(200),
+      pluck('target', 'value'),
+      distinctUntilChanged(),
+      switchMap(searchTerm => (
+        ajax.getJSON(`${BASE_URL}?by_name=${searchTerm}`)
+          .pipe(
+            catchError((err, caught) => {
+              console.log('INNER', err);
+              return EMPTY;
+              // return of(err.message);
+              // return caught; // !dont use this it will retry so many times
+            })
+          )
+      )),
+    )
+    .subscribe({
+      next: (res: []) => typeaheadContainer.innerHTML = res.map((val: any) => val.name).join('<br>'),
+      complete: () => console.log('Catch Err Complete!'),
+      error: err => console.log(`ERR - ${err}`)
     });
   }
 
