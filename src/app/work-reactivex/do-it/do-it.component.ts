@@ -8,6 +8,7 @@ import {
   delay,
   distinctUntilChanged,
   distinctUntilKeyChanged,
+  exhaustMap,
   filter,
   first,
   map,
@@ -85,7 +86,8 @@ export class DoItComponent implements OnInit {
     // this.flatMergeMapCons();
     // this.flatMergeMapVsSwitchMap();
     // this.flatSwitchMap();
-    this.flatConcatMap();
+    // this.flatConcatMap();
+    this.flatExhaustMap();
     /**
      * Flattening Operator Ends
      */
@@ -553,6 +555,37 @@ export class DoItComponent implements OnInit {
       next: val => console.log(val),
       complete: () => console.log('ConcatMap Complete!')
     });
+  }
+
+  private flatExhaustMap() {
+    /*
+    const click$ = fromEvent(document, 'click');
+    const interval$ = interval(1000);
+    ! we may click any time only 1st observable emit. once that completed it will take other clicks
+    click$.pipe(
+      exhaustMap(() => interval$.pipe(take(3)))
+    )
+    .subscribe({
+      next: console.log,
+      complete: () => console.log('exhaust complete')
+    });
+    */
+    const authenticateUser = () => {
+      return ajax.post('https://reqres.in/api/login', {
+        email: 'eve.holt@reqres.in',
+        password: 'welcome'
+      });
+    };
+    const loginBtn = document.getElementById('login');
+    const click$ = fromEvent(loginBtn, 'click');
+    click$.pipe(
+      exhaustMap(() => authenticateUser())
+    )
+    .subscribe({
+      next: console.log,
+      complete: () => console.log('exhaust complete')
+    });
+    // ! When user clicks 2 times exhaust will takes the firt and omits the next inner obeervable.
   }
 
   private countDownTimer() {
