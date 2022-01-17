@@ -9,6 +9,7 @@ import {
   delay,
   distinctUntilChanged,
   distinctUntilKeyChanged,
+  endWith,
   exhaustMap,
   filter,
   first,
@@ -19,6 +20,7 @@ import {
   pluck,
   reduce,
   scan,
+  startWith,
   switchMap,
   take,
   takeUntil,
@@ -48,7 +50,6 @@ export class DoItComponent implements OnInit {
     // this.operatorInterval();
     // this.operatorTimer();
     // this.operatorTap();
-    // this.countDownTimer();
 
     /**
      * Transformation Operator Starts
@@ -90,10 +91,20 @@ export class DoItComponent implements OnInit {
     // this.flatConcatMap();
     // this.flatExhaustMap();
     // this.flatMergeMapVsSwitchMapVSConcatMapVsExhaustMap();
-    this.flatCatchError();
+    // this.flatCatchError();
     /**
      * Flattening Operator Ends
      */
+
+    /**
+     * Comination Starts
+     */
+    // this.combStartsWithEndsWith();
+    /**
+     * Comination Ends
+     */
+
+    this.countDownTimer();
   }
 
   private basic() {
@@ -590,6 +601,7 @@ export class DoItComponent implements OnInit {
     });
     // ! When user clicks 2 times exhaust will takes the firt and omits the next inner obeervable.
   }
+
   private flatMergeMapVsSwitchMapVSConcatMapVsExhaustMap() {
     const authenticateUser = () => {
       return ajax.post('https://reqres.in/api/login', {
@@ -641,10 +653,22 @@ export class DoItComponent implements OnInit {
     });
   }
 
+  private combStartsWithEndsWith() {
+    const numbers$ = of(1, 2, 3);
+    numbers$.pipe(
+      startWith('🏎', '🚗'),
+      endWith('🏁')
+    )
+    .subscribe({
+      next: val => console.log(val),
+      complete: () => console.log('Combination complete!')
+    });
+  }
+
   private countDownTimer() {
     this.hasCountdownTimer = true;
     const startFrom = 10;
-    this.timerValue = startFrom;
+    // this.timerValue = startFrom;
     const click$ = fromEvent(this.btnAbort.nativeElement, 'click');
     interval(1000)
       .pipe(
@@ -655,7 +679,8 @@ export class DoItComponent implements OnInit {
         }, startFrom),
         tap(val => console.log(`Before filter ${val}`)),
         takeWhile(val => val >= 0),
-        takeUntil(click$)
+        takeUntil(click$),
+        startWith(startFrom)
       )
       .subscribe({
         next: val => {
