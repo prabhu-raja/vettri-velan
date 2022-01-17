@@ -1,5 +1,16 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { EMPTY, from, fromEvent, interval, Observable, Observer, of, range, timer } from 'rxjs';
+import {
+  concat,
+  EMPTY,
+  from,
+  fromEvent,
+  interval,
+  Observable,
+  Observer,
+  of,
+  range,
+  timer
+} from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import {
   catchError,
@@ -100,11 +111,12 @@ export class DoItComponent implements OnInit {
      * Comination Starts
      */
     // this.combStartsWithEndsWith();
+    this.combConcat();
     /**
      * Comination Ends
      */
 
-    this.countDownTimer();
+    // this.countDownTimer();
   }
 
   private basic() {
@@ -658,6 +670,18 @@ export class DoItComponent implements OnInit {
     numbers$.pipe(
       startWith('🏎', '🚗'),
       endWith('🏁')
+    )
+    .subscribe({
+      next: val => console.log(val),
+      complete: () => console.log('Combination complete!')
+    });
+  }
+
+  private combConcat() {
+    const interval$ = interval(1000);
+    concat(
+      interval$.pipe(take(3)),
+      interval$.pipe(take(2))
     )
     .subscribe({
       next: val => console.log(val),
