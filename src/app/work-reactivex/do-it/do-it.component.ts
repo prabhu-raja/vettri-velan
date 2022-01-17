@@ -113,12 +113,12 @@ export class DoItComponent implements OnInit {
      */
     // this.combStartsWithEndsWith();
     // this.combConcat();
-    this.combMerge();
+    // this.combMerge();
     /**
      * Comination Ends
      */
 
-    // this.countDownTimer();
+    this.countDownTimer();
   }
 
   private basic() {
