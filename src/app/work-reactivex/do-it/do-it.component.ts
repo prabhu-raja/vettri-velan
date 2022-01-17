@@ -5,6 +5,7 @@ import {
   from,
   fromEvent,
   interval,
+  merge,
   Observable,
   Observer,
   of,
@@ -111,7 +112,8 @@ export class DoItComponent implements OnInit {
      * Comination Starts
      */
     // this.combStartsWithEndsWith();
-    this.combConcat();
+    // this.combConcat();
+    this.combMerge();
     /**
      * Comination Ends
      */
@@ -687,6 +689,16 @@ export class DoItComponent implements OnInit {
       next: val => console.log(val),
       complete: () => console.log('Combination complete!')
     });
+  }
+
+  private combMerge() {
+    const click$ = fromEvent(document, 'click');
+    const keyup$ = fromEvent(document, 'keyup');
+    merge(keyup$, click$)
+      .subscribe({
+        next: val => console.log(val),
+        complete: () => console.log('Combination complete!')
+      });
   }
 
   private countDownTimer() {
