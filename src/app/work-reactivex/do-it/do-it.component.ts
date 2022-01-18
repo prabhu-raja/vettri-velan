@@ -38,7 +38,8 @@ import {
   take,
   takeUntil,
   takeWhile,
-  tap
+  tap,
+  withLatestFrom
 } from 'rxjs/operators';
 import { iterator } from '../../app.service';
 @Component({
@@ -116,7 +117,8 @@ export class DoItComponent implements OnInit {
     // this.combStartsWithEndsWith();
     // this.combConcat();
     // this.combMerge();
-    this.combCombineLatest();
+    // this.combCombineLatest();
+    this.combWithLatestFrom();
 
     /**
      * Comination Ends
@@ -734,6 +736,18 @@ export class DoItComponent implements OnInit {
     .subscribe({
       next: val => this.combineLatestValue = val,
       complete: () => console.log('CL complete')
+    });
+  }
+
+  private combWithLatestFrom() {
+    const click$ = fromEvent(document, 'click');
+    const interval$ = interval(1000);
+    click$.pipe(
+      withLatestFrom(interval$)
+    )
+    .subscribe({
+      next: val => console.log(val),
+      complete: () => console.log('Combination complete!')
     });
   }
 
