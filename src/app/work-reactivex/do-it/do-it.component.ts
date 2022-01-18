@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
+  combineLatest,
   concat,
   EMPTY,
   from,
@@ -47,6 +48,7 @@ import { iterator } from '../../app.service';
 })
 export class DoItComponent implements OnInit {
   timerValue: number;
+  combineLatestValue: number;
   @ViewChild('btnStart', {static: true}) btnStart: ElementRef<HTMLButtonElement>;
   @ViewChild('btnPause', {static: true}) btnPause: ElementRef<HTMLButtonElement>;
 
@@ -114,11 +116,13 @@ export class DoItComponent implements OnInit {
     // this.combStartsWithEndsWith();
     // this.combConcat();
     // this.combMerge();
+    this.combCombineLatest();
+
     /**
      * Comination Ends
      */
 
-    this.countDownTimer();
+    // this.countDownTimer();
   }
 
   private basic() {
@@ -699,6 +703,38 @@ export class DoItComponent implements OnInit {
         next: val => console.log(val),
         complete: () => console.log('Combination complete!')
       });
+  }
+
+  private combCombineLatest() {
+    /*
+    const click$ = fromEvent(document, 'click');
+    const keyup$ = fromEvent(document, 'keyup');
+    combineLatest(keyup$, click$)
+      .subscribe({
+        next: val => console.log(val),
+        complete: () => console.log('Combination complete!')
+      });
+    */
+    const one = document.getElementById('first');
+    const two = document.getElementById('second');
+    const keyupAsValue = elem => {
+      return fromEvent(elem, 'keyup').pipe(
+        map((evt: any) => evt.target.valueAsNumber)
+      );
+    };
+
+    combineLatest(
+      keyupAsValue(one),
+      keyupAsValue(two)
+    )
+    .pipe(
+      filter(([val1, val2]) => !isNaN(val1) && !isNaN(val2)),
+      map(([val1, val2]) => val1 + val2)
+    )
+    .subscribe({
+      next: val => this.combineLatestValue = val,
+      complete: () => console.log('CL complete')
+    });
   }
 
   private countDownTimer() {
