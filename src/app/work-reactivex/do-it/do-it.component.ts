@@ -3,6 +3,7 @@ import {
   combineLatest,
   concat,
   EMPTY,
+  forkJoin,
   from,
   fromEvent,
   interval,
@@ -118,7 +119,8 @@ export class DoItComponent implements OnInit {
     // this.combConcat();
     // this.combMerge();
     // this.combCombineLatest();
-    this.combWithLatestFrom();
+    // this.combWithLatestFrom();
+    this.combForkJoin();
 
     /**
      * Comination Ends
@@ -748,6 +750,30 @@ export class DoItComponent implements OnInit {
     .subscribe({
       next: val => console.log(val),
       complete: () => console.log('Combination complete!')
+    });
+  }
+
+  private combForkJoin() {
+    const numbers$ = of(1, 2, 3);
+    const letters$ = of('a', 'b', 'c');
+    /*
+    forkJoin(
+      numbers$,
+      letters$.pipe(delay(3000))
+    )
+    .subscribe({
+      next: val => console.log(val),
+      complete: () => console.log('🍴 complete!')
+    });
+    */
+    const GITHUB_API_BASE = 'https://api.github.com';
+    forkJoin(
+      ajax.getJSON(`${GITHUB_API_BASE}/users/reactivex`),
+      ajax.getJSON(`${GITHUB_API_BASE}/users/reactivex/repos`),
+    )
+    .subscribe({
+      next: val => console.log(val),
+      complete: () => console.log('🍴 complete!')
     });
   }
 
