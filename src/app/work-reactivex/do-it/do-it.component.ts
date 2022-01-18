@@ -46,9 +46,9 @@ import { iterator } from '../../app.service';
   styleUrls: ['./do-it.component.scss']
 })
 export class DoItComponent implements OnInit {
-  hasCountdownTimer = false;
   timerValue: number;
-  @ViewChild('btnAbort', {static: true}) btnAbort: ElementRef<HTMLButtonElement>;
+  @ViewChild('btnStart', {static: true}) btnStart: ElementRef<HTMLButtonElement>;
+  @ViewChild('btnPause', {static: true}) btnPause: ElementRef<HTMLButtonElement>;
 
   constructor() { }
 
@@ -702,29 +702,31 @@ export class DoItComponent implements OnInit {
   }
 
   private countDownTimer() {
-    this.hasCountdownTimer = true;
     const startFrom = 10;
-    // this.timerValue = startFrom;
-    const click$ = fromEvent(this.btnAbort.nativeElement, 'click');
-    interval(1000)
-      .pipe(
-        mapTo(-1),
-        scan((accumulator, currentValue) => {
-          console.log(`accumulator  ${accumulator} | currentValue  ${currentValue}`);
-          return accumulator + currentValue;
-        }, startFrom),
-        tap(val => console.log(`Before filter ${val}`)),
-        takeWhile(val => val >= 0),
-        takeUntil(click$),
-        startWith(startFrom)
-      )
-      .subscribe({
-        next: val => {
-          this.timerValue = val;
-          console.log(`countdown ${val}`);
-        },
-        complete: () => console.log('⏳ completed')
-      });
+    const counter$ = interval(1000);
+    const startClick$ = fromEvent(this.btnStart.nativeElement, 'click');
+    const pauseClick$ = fromEvent(this.btnPause.nativeElement, 'click');
+
+    merge(
+      startClick$.pipe(mapTo(true)),
+      pauseClick$.pipe(mapTo(false))
+    )
+    .pipe(
+      switchMap(shouldStart => shouldStart ? counter$ : EMPTY),
+      mapTo(-1),
+      scan((accumulator, currentValue) => {
+        return accumulator + currentValue;
+      }, startFrom),
+      takeWhile(val => val >= 0),
+      startWith(startFrom)
+    )
+    .subscribe({
+      next: val => {
+        this.timerValue = val;
+        console.log(`countdown ${val}`);
+      },
+      complete: () => console.log('⏳ completed')
+    });
   }
 
 }
