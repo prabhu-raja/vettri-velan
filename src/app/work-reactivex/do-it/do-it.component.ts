@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
+  BehaviorSubject,
   combineLatest,
   concat,
   EMPTY,
@@ -12,6 +13,7 @@ import {
   Observer,
   of,
   range,
+  ReplaySubject,
   Subject,
   timer
 } from 'rxjs';
@@ -132,7 +134,9 @@ export class DoItComponent implements OnInit {
      */
     // this.subSubject();
     // this.subWhySubject();
-    this.subShare();
+    // this.subShare();
+    // this.subBehaviorSubject();
+    this.subReplaySubject();
     /**
      * Subject Ends
      */
@@ -859,7 +863,6 @@ export class DoItComponent implements OnInit {
       error: err => console.log(`value of error is ${err}`),
       complete: () => console.log('completed!')
     };
-
     const interval$ = interval(2000)
       .pipe(
         tap(val => console.log(`New interval ${val}`)),
@@ -867,5 +870,44 @@ export class DoItComponent implements OnInit {
       );
     interval$.subscribe(observer);
     interval$.subscribe(observer);
+  }
+
+  private subBehaviorSubject() {
+    const bs = new BehaviorSubject<string>('Ready');
+
+    bs.subscribe({
+      next: val => console.log(`Frm Sub1 ${val}`),
+      complete: () => console.log('Frm Sub1 completed!')
+    });
+
+    bs.next('Hello');
+
+    bs.subscribe({
+      next: val => console.log(`Frm Sub2 ${val}`),
+      complete: () => console.log('Frm Sub2 completed!')
+    });
+
+    bs.next('World');
+    console.log(`Latest val from Behavior subject is ${bs.getValue()}`);
+  }
+
+  private subReplaySubject() {
+    const bs = new ReplaySubject();
+
+    bs.subscribe({
+      next: val => console.log(`Frm Sub1 ${val}`),
+      complete: () => console.log('Frm Sub1 completed!')
+    });
+
+
+    bs.subscribe({
+      next: val => console.log(`Frm Sub2 ${val}`),
+      complete: () => console.log('Frm Sub2 completed!')
+    });
+
+    bs.next('Hello');
+    bs.next('Good');
+    bs.next('World');
+
   }
 }
