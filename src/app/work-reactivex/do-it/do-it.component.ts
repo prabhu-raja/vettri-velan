@@ -35,6 +35,7 @@ import {
   pluck,
   reduce,
   scan,
+  share,
   startWith,
   switchMap,
   take,
@@ -130,7 +131,8 @@ export class DoItComponent implements OnInit {
      * Subject Starts
      */
     // this.subSubject();
-    this.subWhySubject();
+    // this.subWhySubject();
+    this.subShare();
     /**
      * Subject Ends
      */
@@ -848,5 +850,22 @@ export class DoItComponent implements OnInit {
     // interval$.subscribe(observer);
     // interval$.subscribe(observer);
     interval$.subscribe(subject);
+  }
+
+  private subShare() {
+    // ! instead of subject we can use share for multicast subscriptions
+    const observer: Observer<any> = {
+      next: val => console.log(`value of next is ${val}`),
+      error: err => console.log(`value of error is ${err}`),
+      complete: () => console.log('completed!')
+    };
+
+    const interval$ = interval(2000)
+      .pipe(
+        tap(val => console.log(`New interval ${val}`)),
+        share()
+      );
+    interval$.subscribe(observer);
+    interval$.subscribe(observer);
   }
 }
