@@ -12,6 +12,7 @@ import {
   Observer,
   of,
   range,
+  Subject,
   timer
 } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
@@ -120,12 +121,18 @@ export class DoItComponent implements OnInit {
     // this.combMerge();
     // this.combCombineLatest();
     // this.combWithLatestFrom();
-    this.combForkJoin();
-
+    // this.combForkJoin();
     /**
      * Comination Ends
      */
 
+    /**
+     * Subject Starts
+     */
+    this.subSubject();
+    /**
+     * Subject Ends
+     */
     // this.countDownTimer();
   }
 
@@ -805,4 +812,20 @@ export class DoItComponent implements OnInit {
     });
   }
 
+  private subSubject() {
+    const observer: Observer<any> = {
+      next: val => console.log(`value of next is ${val}`),
+      error: err => console.log(`value of error is ${err}`),
+      complete: () => console.log('completed!')
+    };
+
+    const subject = new Subject<string>();
+    subject.next('Loading');
+
+    const subscription = subject.subscribe(observer);
+    subject.next('Hello');
+
+    const subscriptionTwo = subject.subscribe(observer);
+    subject.next('World');
+  }
 }
