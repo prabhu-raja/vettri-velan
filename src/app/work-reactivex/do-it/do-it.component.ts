@@ -129,7 +129,8 @@ export class DoItComponent implements OnInit {
     /**
      * Subject Starts
      */
-    this.subSubject();
+    // this.subSubject();
+    this.subWhySubject();
     /**
      * Subject Ends
      */
@@ -827,5 +828,25 @@ export class DoItComponent implements OnInit {
 
     const subscriptionTwo = subject.subscribe(observer);
     subject.next('World');
+  }
+
+  private subWhySubject() {
+    const observer: Observer<any> = {
+      next: val => console.log(`value of next is ${val}`),
+      error: err => console.log(`value of error is ${err}`),
+      complete: () => console.log('completed!')
+    };
+
+    const subject = new Subject<any>();
+    const subscription = subject.subscribe(observer);
+    const subscriptionTwo = subject.subscribe(observer);
+
+    const interval$ = interval(2000)
+      .pipe(
+        tap(val => console.log(`New interval ${val}`))
+      );
+    // interval$.subscribe(observer);
+    // interval$.subscribe(observer);
+    interval$.subscribe(subject);
   }
 }
