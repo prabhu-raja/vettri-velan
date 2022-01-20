@@ -151,7 +151,8 @@ export class DoItComponent implements OnInit {
     /**
      * Misc Starts
      */
-    this.miscFinalize();
+    // this.miscFinalize();
+    this.miscUnsubscribeViaTakeUntil();
     /**
      * Misc Starts
      */
@@ -1001,5 +1002,36 @@ export class DoItComponent implements OnInit {
     //     next: val => console.log(`fin - ${val} `),
     //     complete: () => console.log('fin complete')
     //   });
+  }
+
+  private miscUnsubscribeViaTakeUntil() {
+    const onDestroy$ = new Subject();
+
+    fromEvent(document, 'click')
+      .pipe(
+        map((evt: MouseEvent) => {
+          return {
+            x: evt.clientX,
+            y: evt.clientY
+          };
+        }),
+        takeUntil(onDestroy$)
+      )
+      .subscribe({
+        next: console.log,
+        complete: () => console.log('Click completed!')
+      });
+
+    interval(1000)
+      .pipe(takeUntil(onDestroy$))
+      .subscribe({
+        next: console.log,
+        complete: () => console.log('Interval completed!')
+      });
+
+    setTimeout(() => {
+      onDestroy$.next('fff');
+      onDestroy$.complete();
+    }, 3000);
   }
 }
