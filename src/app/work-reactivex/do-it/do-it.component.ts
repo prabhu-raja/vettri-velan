@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
+  AsyncSubject,
   BehaviorSubject,
   combineLatest,
   concat,
@@ -139,7 +140,8 @@ export class DoItComponent implements OnInit {
     // this.subShare();
     // this.subBehaviorSubject();
     // this.subReplaySubject();
-    this.subShareReplay();
+    // this.subShareReplay();
+    this.subAsyncSubject();
     /**
      * Subject Ends
      */
@@ -931,5 +933,31 @@ export class DoItComponent implements OnInit {
       console.log('Share Replay 2nd subscribing');
       clickReq$.subscribe(observer);
     }, 4000);
+  }
+
+  private subAsyncSubject() {
+    const observer: Observer<any> = {
+      next: val => console.log(`value of next is ${val}`),
+      error: err => console.log(`value of error is ${err}`),
+      complete: () => console.log('completed!')
+    };
+
+    // const sub = new AsyncSubject();
+    // sub.subscribe(observer);
+    // sub.subscribe(observer);
+
+    // const interval$ = interval(1000).pipe(
+    //   take(3),
+    //   tap(val => console.log(`New Interval ${val}`))
+    //   );
+    // interval$.subscribe(sub);
+
+    const subj = new AsyncSubject();
+    subj.subscribe(observer);
+    subj.subscribe(observer);
+    subj.next('Hello');
+    subj.next('World');
+    subj.next('Good Morning!');
+    subj.complete();
   }
 }
