@@ -16,6 +16,7 @@ import {
   range,
   ReplaySubject,
   Subject,
+  throwError,
   timer
 } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
@@ -30,6 +31,7 @@ import {
   endWith,
   exhaustMap,
   filter,
+  finalize,
   first,
   map,
   mapTo,
@@ -141,9 +143,17 @@ export class DoItComponent implements OnInit {
     // this.subBehaviorSubject();
     // this.subReplaySubject();
     // this.subShareReplay();
-    this.subAsyncSubject();
+    // this.subAsyncSubject();
     /**
      * Subject Ends
+     */
+
+    /**
+     * Misc Starts
+     */
+    this.miscFinalize();
+    /**
+     * Misc Starts
      */
     // this.countDownTimer();
   }
@@ -959,5 +969,37 @@ export class DoItComponent implements OnInit {
     subj.next('World');
     subj.next('Good Morning!');
     subj.complete();
+  }
+
+  private miscFinalize() {
+    const interval$ = interval(1000);
+    // ! Before the interval$ completed when we unsubscribe the subscription won't complete.
+    // ! But same complete action we can do in finally.
+    // const sub = interval$.subscribe({
+    //     next: val => console.log(`fin - ${val} `),
+    //     complete: () => console.log('fin complete')
+    //   });
+    // setTimeout(() => {
+    //   sub.unsubscribe();
+    // }, 3000);
+
+    const sub = interval$
+      .pipe(
+        finalize(() => console.log(`complete in finalize`))
+      )
+      .subscribe({
+        next: val => console.log(`fin - ${val} `),
+        complete: () => console.log('fin complete')
+      });
+    setTimeout(() => sub.unsubscribe(), 3000);
+
+    // throwError('it has err')
+    //   .pipe(
+    //     finalize(() => console.log(`complete in ERR finalize`))
+    //   )
+    //   .subscribe({
+    //     next: val => console.log(`fin - ${val} `),
+    //     complete: () => console.log('fin complete')
+    //   });
   }
 }
