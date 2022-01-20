@@ -34,10 +34,12 @@ import {
   mapTo,
   mergeAll,
   mergeMap,
+  mergeMapTo,
   pluck,
   reduce,
   scan,
   share,
+  shareReplay,
   startWith,
   switchMap,
   take,
@@ -136,7 +138,8 @@ export class DoItComponent implements OnInit {
     // this.subWhySubject();
     // this.subShare();
     // this.subBehaviorSubject();
-    this.subReplaySubject();
+    // this.subReplaySubject();
+    this.subShareReplay();
     /**
      * Subject Ends
      */
@@ -909,5 +912,24 @@ export class DoItComponent implements OnInit {
     bs.next('Good');
     bs.next('World');
 
+  }
+
+  private subShareReplay() {
+    // ! it's not working current rxjs version.. check with latest
+    const observer: Observer<any> = {
+      next: val => console.log(`🔁`, val),
+      error: err => console.log(`▶️ error is ${err}`),
+      complete: () => console.log(`▶️ completed!`)
+    };
+    const click$ = fromEvent(document, 'click');
+    const clickReq$ = click$.pipe(
+      mergeMapTo(ajax(`http://api.github.com/users/octocat`)),
+      shareReplay()
+    );
+    clickReq$.subscribe(observer);
+    setTimeout(() => {
+      console.log('Share Replay 2nd subscribing');
+      clickReq$.subscribe(observer);
+    }, 4000);
   }
 }
