@@ -54,7 +54,7 @@ const routes: Routes = [
     BrowserModule,
     AppSharedModule,
     // SampleModule,
-    WorkReactivexModule,
+    // WorkReactivexModule,
     RouterModule.forRoot(routes, {
       // preloadingStrategy: PreloadAllModules // * This will preload all lazy load modules
       preloadingStrategy: CustomPreload // * This is custom preload
