@@ -138,7 +138,7 @@ export class DoItComponent implements OnInit {
      * Subject Starts
      */
     // this.subSubject();
-    // this.subWhySubject();
+    this.subWhySubject();
     // this.subShare();
     // this.subBehaviorSubject();
     // this.subReplaySubject();
@@ -152,7 +152,7 @@ export class DoItComponent implements OnInit {
      * Misc Starts
      */
     // this.miscFinalize();
-    this.miscUnsubscribeViaTakeUntil();
+    // this.miscUnsubscribeViaTakeUntil();
     /**
      * Misc Starts
      */
@@ -845,10 +845,10 @@ export class DoItComponent implements OnInit {
     const subject = new Subject<string>();
     subject.next('Loading');
 
-    const subscription = subject.subscribe(observer);
+    subject.subscribe(observer);
     subject.next('Hello');
 
-    const subscriptionTwo = subject.subscribe(observer);
+    subject.subscribe(observer);
     subject.next('World');
   }
 
@@ -860,10 +860,10 @@ export class DoItComponent implements OnInit {
     };
 
     const subject = new Subject<any>();
-    const subscription = subject.subscribe(observer);
-    const subscriptionTwo = subject.subscribe(observer);
+    subject.subscribe(observer);
+    subject.subscribe(observer);
 
-    const interval$ = interval(2000)
+    const interval$ = interval(1000)
       .pipe(
         tap(val => console.log(`New interval ${val}`))
       );
