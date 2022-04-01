@@ -138,7 +138,7 @@ export class DoItComponent implements OnInit {
      * Subject Starts
      */
     // this.subSubject();
-    this.subWhySubject();
+    // this.subWhySubject();
     // this.subShare();
     // this.subBehaviorSubject();
     // this.subReplaySubject();

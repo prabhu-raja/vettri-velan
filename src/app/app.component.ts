@@ -26,12 +26,16 @@ import { ObservableStoreService } from './app-shared/services/observable-store.s
 })
 export class AppComponent implements OnInit {
   title = 'vettri-velan';
+  player1Poistion = 0;
+  player2Poistion = 0;
 
   constructor(
     private storeService: ObservableStoreService
     ) { }
 
   ngOnInit(): void {
+    this.player1Roll();
+    // this.todo();
     // this.section1();
     // this.section2();
     // this.section3();
@@ -304,5 +308,158 @@ export class AppComponent implements OnInit {
         map(val => val.name)
       )
       .subscribe(console.log);
+  }
+
+  // tslint:disable-next-line:adjacent-overload-signatures
+  todo() {
+    const movies = [
+      {
+        name: 'The Dark Knight',
+        rating: 'PG-13',
+        year: 2012,
+        bestScene: {
+          name: 'fight',
+          location: 'sewer',
+          sceneLength: 10,
+          actors: ['Christian Bale', 'Tom Hardy'
+          ]
+        }
+      },
+      {
+        name: 'Good Burger',
+        rating: 'PG',
+        year: 1994,
+        bestScene: {
+          name: 'jump',
+          location: 'giant milkshake',
+          sceneLength: 5,
+          actors: ['Kenan Thompson', 'Kel Mitchell'
+          ]
+        }
+      },
+      {
+        name: 'Sharknado 2: The Second One',
+        rating: 'TV-14',
+        year: 2013
+      },
+      {
+        name: 'The Big Short',
+        rating: 'R',
+        year: 2015,
+        bestScene: {
+          name: 'explanation',
+          location: 'casino',
+          sceneLength: 20,
+          actors: ['Christian Bale', 'Steve Carrell'
+          ]
+        }
+      }
+    ];
+    let consolidatedActors = [];
+    movies.forEach(mov => {
+      if (mov && mov.bestScene && mov.bestScene.actors) {
+        consolidatedActors = [...consolidatedActors, ...mov.bestScene.actors];
+      }
+    });
+    const uniqueActors = [...new Set(consolidatedActors)];
+    console.log(uniqueActors);
+  }
+
+  chuteLadders() {
+
+    let currentPosition = 0;
+
+    const chuteVal = this.actionChute(47);
+
+    // Ladders:
+    // 1 - 38   = 37
+    // 4 - 14 = 10
+    // 9 - 31 = 22
+    // 21 - 42 = 21
+    // 28 - 84 = 56
+    // 36 - 44 = 8
+    // 51 - 67 = 16
+    // 71 - 91 = 20
+    // 80 - 100 = 20
+
+
+
+
+    // Chutes: =
+    // 17 - 6
+    // 47 - 26
+    // 49 - 11
+    // 56 - 53
+    // 62 - 19
+    // 64 - 60
+    // 87 - 24
+    // 93 - 73
+    // 95 -75
+    // 98 - 78
+  }
+
+  player1Roll() {
+    const player1 = this.player1Factory();
+    const playerDiceValue = this.getRandomDiceNumber();
+    const goto = player1(playerDiceValue);
+  }
+
+  player1Factory() {
+    const chutes = {
+      17: 6,
+      47: 26,
+      49: 11,
+      56: 53,
+      62: 19,
+      64: 60,
+      87: 24,
+      93: 73,
+      95: 75,
+      98: 78
+    };
+    const ladders = {
+      1: 38,
+      4: 14,
+      9: 31,
+      21: 42,
+      28: 84,
+      36: 44,
+      51: 67,
+      71: 91,
+      80: 100
+    };
+    return (diceVal) => {
+      const total = diceVal + this.player1Poistion;
+      if (chutes[total]) {
+        return chutes[total];
+      } else if (ladders[total]) {
+        return ladders[total];
+      }
+      return total;
+    };
+  }
+
+  private getRandomDiceNumber() {
+    const diceRoll = Math.floor( Math.random() * 6 ) + 1;
+    return diceRoll;
+  }
+
+  private actionChute(currentPosition) {
+    const chutes = {
+      17: 6,
+      47: 26,
+      49: 11,
+      56: 53,
+      62: 19,
+      64: 60,
+      87: 24,
+      93: 73,
+      95: 75,
+      98: 78
+    };
+    if (chutes[currentPosition]) {
+      return chutes[currentPosition];
+    }
+    return currentPosition;
   }
 }
