@@ -31,15 +31,35 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
+    // this.practiseMap();
     // this.practiseMergeAll();
     // this.mergeAllToMergeMap();
     // this.practiseMergeMap1();
     // this.practiseMergeMap2();
     // this.practiseInitSwitchMap();
-    this.practiseSwitchMap();
+    // this.practiseSwitchMap();
     // this.playConcatMap();
     // this.practiseConcatMap();
     // this.practiseExhaustMap();
+  }
+
+  practiseMap() {
+    const textInput = document.getElementById('text-input');
+    const input$ = fromEvent<any>(textInput, 'keyup');
+    input$
+      .pipe(
+        map(evt => {
+          const term = evt.target.value;
+          return ajax.getJSON(`https://api.github.com/users/${term}`); // Higher-Order Observable
+        }),
+        tap(val => console.log('Before Merge All', val)),
+      )
+      .subscribe(res => {
+        console.log('parctise Map', res); // Here we will get Observable
+        console.log('parctise Map', res.subscribe()); // To fetch the response we have to subscribe again.
+        // To avoid these we need to flatten these by mergeall / mergemap / switchmap / concatmap / exhaustmap
+        // Flattening operators take an observable that emits observables subscribing internally, emitting results to the outer stream
+      });
   }
 
   practiseMergeAll() {
@@ -56,6 +76,7 @@ export class RxTransformationComponent implements OnInit, OnDestroy {
         mergeAll()
       )
       .subscribe(console.log);
+    // Instead of doing map and then mergeAll, we combile these two with mergeMap in below example
   }
 
   mergeAllToMergeMap() {
