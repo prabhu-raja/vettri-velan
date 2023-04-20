@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent, combineLatest, interval } from 'rxjs';
+import { fromEvent, combineLatest, interval, of, forkJoin } from 'rxjs';
 import { map, tap, filter, withLatestFrom, scan, mapTo, takeWhile } from 'rxjs/operators';
 
 @Component({
@@ -12,9 +12,10 @@ export class RxCombinationComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.playCombineLatest();
+    // this.playCombineLatest();
     // this.playWithLatestFrom();
-    this.playCountDowntimer();
+    // this.playCountDowntimer();
+    this.compareCombineLatestAndForkJoin();
   }
 
   playCombineLatest() {
@@ -50,6 +51,24 @@ export class RxCombinationComponent implements OnInit {
     click$
       .pipe(withLatestFrom(interval(1000)))
       .subscribe(console.log);
+  }
+
+  compareCombineLatestAndForkJoin() {
+    const numbers$ = of(1, 2, 3);
+    const letters$ = of('a', 'b', 'c');
+    // combineLatest(
+    forkJoin(
+      numbers$,
+      letters$
+    ).subscribe(console.log);
+
+    // combineLatest returns as below;
+    // [3, 'a'];
+    // [3, 'b'];
+    // [3, 'c'];
+    
+    // forkJoin returns as [3, 'c']
+
   }
 
   playCountDowntimer() {
