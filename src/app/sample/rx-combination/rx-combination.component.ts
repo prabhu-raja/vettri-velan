@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent, combineLatest } from 'rxjs';
-import { map, tap, filter } from 'rxjs/operators';
+import { fromEvent, combineLatest, interval } from 'rxjs';
+import { map, tap, filter, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rx-combination',
@@ -15,6 +15,7 @@ export class RxCombinationComponent implements OnInit {
 
   ngOnInit() {
     this.playCombineLatest();
+    this.playWithLatestFrom();
   }
 
   playCombineLatest() {
@@ -43,6 +44,13 @@ export class RxCombinationComponent implements OnInit {
       })
     )
     .subscribe(console.log);
+  }
+
+  playWithLatestFrom() {
+    const click$ = fromEvent(document, 'click');
+    click$
+      .pipe(withLatestFrom(interval(1000)))
+      .subscribe(console.log);
   }
 
 }
