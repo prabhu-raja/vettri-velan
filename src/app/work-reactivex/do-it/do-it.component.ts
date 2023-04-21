@@ -140,7 +140,7 @@ export class DoItComponent implements OnInit {
     // this.subSubject();
     // this.subWhySubject();
     // this.subShare();
-    // this.subBehaviorSubject();
+    this.subBehaviorSubject();
     // this.subReplaySubject();
     // this.subShareReplay();
     // this.subAsyncSubject();
@@ -904,6 +904,10 @@ export class DoItComponent implements OnInit {
     });
 
     bs.next('World');
+    bs.subscribe({
+      next: val => console.log(`Frm Sub3 ${val}`),
+      complete: () => console.log('Frm Sub3 completed!')
+    });
     console.log(`Latest val from Behavior subject is ${bs.getValue()}`);
   }
 
