@@ -34,7 +34,8 @@ export class AppComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.player1Roll();
+    // this.closureExample();
+    // this.player1Roll();
     // this.todo();
     // this.section1();
     // this.section2();
@@ -48,9 +49,54 @@ export class AppComponent implements OnInit {
     // this.practiseTakeUntil();
     // this.practiseDistinctUntilChanged();
     // this.playCold();
+    // this.playCold2();
+    this.playCold2Hot();
     // this.playHot();
     // this.storeService.selectState('name').subscribe(console.log);
     // this.storeService.updateState({name: 'Joe', isAuthenticated: true});
+  }
+
+  /**
+   * Closure Example by Robin Wieruch
+   * https://www.robinwieruch.de/javascript-closure/
+   * 
+   */
+  getEmployeeFactory() {
+    let empNumber = 1;
+    return function(name, country) {
+      const emp = {
+        employeeNumber: empNumber++,
+        name,
+        country
+      };
+      return emp;
+    }
+  }
+  closureExample() {
+    const getEmployee = this.getEmployeeFactory();
+    const empOne = getEmployee('Robin', 'Germany');
+    const empTwo = getEmployee('Weiruch', 'Germany');
+    const employees = [empOne, empTwo];
+    console.log('😀', employees);
+  }
+
+  playCold2() {
+    // * when the data produced inside the observable
+    const obs$ = new Observable(obs => {
+      obs.next(Math.random())
+    });
+    obs$.subscribe(res => console.log('🥶-1', res)); // 🥶-1 0.2794320662737444
+    obs$.subscribe(res => console.log('🥶-2', res)); // 🥶-2 0.18523626352607492
+  }
+
+  playCold2Hot() {
+    // * when the data produced outside the observable
+    const random = Math.random();
+    const obs$ = new Observable(obs => {
+      obs.next(random)
+    });
+    obs$.subscribe(res => console.log('🔥-1', res)); // 🔥-1 0.8657828908179463
+    obs$.subscribe(res => console.log('🔥-2', res)); // 🔥-2 0.8657828908179463
   }
 
   playCold() {
@@ -60,7 +106,6 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       interval$.subscribe(val => console.log('subTwo🐢 - ', val));
     }, 3000);
-
     /*
     Outout Console:
     subOne🐰 -  0
