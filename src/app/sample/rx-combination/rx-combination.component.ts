@@ -8,17 +8,21 @@ import { map, tap, filter, withLatestFrom, scan, mapTo, takeWhile } from 'rxjs/o
   styleUrls: ['./rx-combination.component.scss']
 })
 export class RxCombinationComponent implements OnInit {
+  price = 1000;
 
   constructor() { }
 
   ngOnInit() {
-    // this.playCombineLatest();
+    this.playCombineLatest();
     // this.playWithLatestFrom();
     // this.playCountDowntimer();
     this.compareCombineLatestAndForkJoin();
   }
 
   playCombineLatest() {
+    const price = 100;
+    console.log('🙋‍♂️', `global - ${this.price} - Local - ${price}`);
+    
     // element refs
     const first = document.getElementById('first');
     const second = document.getElementById('second');
