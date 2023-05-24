@@ -34,6 +34,9 @@ export class AppComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.getFirstElement([1, 2, 3]);
+    this.getGenericFirstElement(['1', '2', '3']);
+    this.getGenericFirstElement([1, 2, 3]);
     // this.closureExample();
     // this.player1Roll();
     // this.todo();
@@ -72,6 +75,7 @@ export class AppComponent implements OnInit {
       return emp;
     }
   }
+
   closureExample() {
     const getEmployee = this.getEmployeeFactory();
     const empOne = getEmployee('Robin', 'Germany');
@@ -97,6 +101,13 @@ export class AppComponent implements OnInit {
     });
     obs$.subscribe(res => console.log('🔥-1', res)); // 🔥-1 0.8657828908179463
     obs$.subscribe(res => console.log('🔥-2', res)); // 🔥-2 0.8657828908179463
+  }
+
+  getFirstElement(elements: number[]): number {
+    return elements[0];
+  }
+  getGenericFirstElement<T>(elements: T[]): T {
+    return elements[0];
   }
 
   playCold() {
